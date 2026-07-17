@@ -348,6 +348,105 @@
       display: block;
     }
 
+    /* 文件上传 */
+    .upload-area {
+      border: 2px dashed var(--color-border);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 20px;
+      background: var(--color-bg-alt);
+    }
+
+    .upload-area:hover {
+      border-color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.04);
+    }
+
+    .upload-area--dragover {
+      border-color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .upload-area__icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .upload-area__text {
+      font-size: 0.95rem;
+      color: var(--color-text-light);
+    }
+
+    .upload-area__text strong {
+      color: var(--color-primary);
+    }
+
+    .upload-area__hint {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin-top: 4px;
+    }
+
+    .upload-input {
+      display: none;
+    }
+
+    .upload-filename {
+      display: none;
+      padding: 8px 16px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-primary);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .upload-filename.show {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upload-filename__remove {
+      background: none;
+      border: none;
+      color: var(--color-text-light);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0 4px;
+    }
+
+    .upload-filename__remove:hover {
+      color: #dc2626;
+    }
+
+    /* Markdown 切换 */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .mode-toggle__btn {
+      padding: 6px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: 999px;
+      background: var(--color-bg);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--color-text-light);
+    }
+
+    .mode-toggle__btn.active {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.06);
+    }
+
     @media (max-width: 768px) {
       .btn-group {
         flex-direction: column;
@@ -366,6 +465,7 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <!-- 登录界面 -->
@@ -396,6 +496,18 @@
 
       <div class="form-section">
         <h2 class="form-section__title">发布新文章</h2>
+
+        <!-- 文件上传区域 -->
+        <div class="upload-area" id="upload-area">
+          <div class="upload-area__icon">📄</div>
+          <div class="upload-area__text"><strong>点击上传</strong> 或拖拽 Markdown 文件到此处</div>
+          <div class="upload-area__hint">支持 .md 文件，自动解析标题、正文等内容</div>
+        </div>
+        <input type="file" class="upload-input" id="upload-input" accept=".md,.markdown,.txt" />
+        <div class="upload-filename" id="upload-filename">
+          <span id="upload-filename-text"></span>
+          <button class="upload-filename__remove" id="upload-remove">&times;</button>
+        </div>
 
         <div class="form-group">
           <label class="form-group__label">标题</label>
@@ -430,8 +542,12 @@
 
         <div class="form-group">
           <label class="form-group__label">正文内容</label>
-          <textarea class="form-group__textarea" id="post-content" placeholder="支持 HTML 格式，如 &lt;h2&gt;二级标题&lt;/h2&gt;、&lt;p&gt;段落&lt;/p&gt;、&lt;code&gt;代码&lt;/code&gt;"></textarea>
-          <div class="form-group__hint">支持标签：&lt;h2&gt;二级标题&lt;/h2&gt;、&lt;p&gt;段落&lt;/p&gt;、&lt;code&gt;代码&lt;/code&gt;</div>
+          <div class="mode-toggle">
+            <button class="mode-toggle__btn active" id="mode-md">Markdown 模式</button>
+            <button class="mode-toggle__btn" id="mode-html">HTML 模式</button>
+          </div>
+          <textarea class="form-group__textarea" id="post-content" placeholder="支持 Markdown 语法：## 二级标题、**粗体**、`代码` 等" style="min-height: 200px;"></textarea>
+          <div class="form-group__hint" id="content-hint">Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)</div>
         </div>
 
         <div class="btn-group">
@@ -457,6 +573,9 @@
     // 默认密码：admin123（可在代码中修改）
     const ADMIN_PASSWORD = 'admin123';
 
+    // 内容模式：md 或 html
+    let contentMode = 'md';
+
     // DOM 元素
     const loginPage = document.getElementById('login-page');
     const adminPage = document.getElementById('admin-page');
@@ -477,6 +596,18 @@
     const previewBtn = document.getElementById('preview-btn');
     const clearBtn = document.getElementById('clear-btn');
     const previewCard = document.getElementById('preview-card');
+
+    // 文件上传元素
+    const uploadArea = document.getElementById('upload-area');
+    const uploadInput = document.getElementById('upload-input');
+    const uploadFilename = document.getElementById('upload-filename');
+    const uploadFilenameText = document.getElementById('upload-filename-text');
+    const uploadRemove = document.getElementById('upload-remove');
+
+    // 模式切换元素
+    const modeMd = document.getElementById('mode-md');
+    const modeHtml = document.getElementById('mode-html');
+    const contentHint = document.getElementById('content-hint');
 
     // 设置默认日期为今天
     postDate.value = new Date().toISOString().split('T')[0];
@@ -511,10 +642,16 @@
       const excerpt = postExcerpt.value || '暂无摘要';
       const content = postContent.value || '';
 
+      // 根据模式转换内容
+      let htmlContent = content;
+      if (contentMode === 'md' && content) {
+        htmlContent = marked.parse(content);
+      }
+
       previewCard.querySelector('.preview-card__title').textContent = title;
       previewCard.querySelector('.preview-card__meta').textContent = `${category} · ${date} · ${readtime}`;
       previewCard.querySelector('.preview-card__excerpt').textContent = excerpt;
-      previewCard.querySelector('.preview-card__content').innerHTML = content;
+      previewCard.querySelector('.preview-card__content').innerHTML = htmlContent;
     }
 
     // 清空表单
@@ -546,6 +683,12 @@
         return;
       }
 
+      // 根据模式转换内容为 HTML
+      let htmlContent = content;
+      if (contentMode === 'md') {
+        htmlContent = marked.parse(content);
+      }
+
       // 创建新文章数据
       const newPost = {
         id: Date.now(),
@@ -555,7 +698,7 @@
         date: date,
         readTime: readtime || '5 分钟',
         author: '作者',
-        content: content
+        content: htmlContent
       };
 
       // 保存到 localStorage
@@ -588,6 +731,150 @@
     [postTitle, postCategory, postDate, postReadtime, postExcerpt, postContent].forEach(input => {
       input.addEventListener('input', previewPost);
     });
+
+    // 模式切换
+    modeMd.addEventListener('click', () => {
+      contentMode = 'md';
+      modeMd.classList.add('active');
+      modeHtml.classList.remove('active');
+      postContent.placeholder = '支持 Markdown 语法：## 二级标题、**粗体**、`代码` 等';
+      contentHint.textContent = 'Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)';
+      previewPost();
+    });
+
+    modeHtml.addEventListener('click', () => {
+      contentMode = 'html';
+      modeHtml.classList.add('active');
+      modeMd.classList.remove('active');
+      postContent.placeholder = '支持 HTML 格式：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
+      contentHint.textContent = 'HTML 标签：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
+      previewPost();
+    });
+
+    // 文件上传：点击选择
+    uploadArea.addEventListener('click', () => {
+      uploadInput.click();
+    });
+
+    // 文件上传：选择文件
+    uploadInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleFile(file);
+    });
+
+    // 文件上传：拖拽
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('upload-area--dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('upload-area--dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('upload-area--dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+
+    // 移除已上传文件
+    uploadRemove.addEventListener('click', () => {
+      uploadFilename.classList.remove('show');
+      uploadInput.value = '';
+    });
+
+    // 处理 Markdown 文件
+    function handleFile(file) {
+      // 验证文件类型
+      const validTypes = ['.md', '.markdown', '.txt'];
+      const ext = '.' + file.name.split('.').pop().toLowerCase();
+      if (!validTypes.includes(ext)) {
+        alert('请上传 .md、.markdown 或 .txt 文件');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        parseMarkdownFile(file.name, text);
+      };
+      reader.readAsText(file);
+    }
+
+    // 解析 Markdown 文件内容
+    function parseMarkdownFile(filename, text) {
+      // 显示文件名
+      uploadFilenameText.textContent = filename;
+      uploadFilename.classList.add('show');
+
+      // 解析 frontmatter（--- 包裹的元数据）
+      let content = text;
+      const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
+      const frontmatterMatch = text.match(frontmatterRegex);
+
+      if (frontmatterMatch) {
+        const frontmatter = frontmatterMatch[1];
+        content = text.replace(frontmatterRegex, '');
+
+        // 解析 frontmatter 字段
+        const lines = frontmatter.split('\n');
+        lines.forEach(line => {
+          const match = line.match(/^(\w+):\s*(.+)$/);
+          if (match) {
+            const key = match[1].toLowerCase();
+            const value = match[2].replace(/['"]/g, '').trim();
+            if (key === 'title' && !postTitle.value) postTitle.value = value;
+            if (key === 'category' && !postCategory.value) {
+              const option = postCategory.querySelector(`option[value="${value}"]`);
+              if (option) postCategory.value = value;
+            }
+            if (key === 'date' && !postDate.value) {
+              const formatted = value.split('T')[0];
+              postDate.value = formatted;
+            }
+            if (key === 'excerpt' || key === 'description') {
+              if (!postExcerpt.value) postExcerpt.value = value;
+            }
+          }
+        });
+      }
+
+      // 如果没有标题，从 Markdown 一级标题提取
+      if (!postTitle.value) {
+        const h1Match = content.match(/^#\s+(.+)$/m);
+        if (h1Match) {
+          postTitle.value = h1Match[1].trim();
+          content = content.replace(/^#\s+.+\n?/m, ''); // 移除一级标题
+        } else {
+          // 从文件名提取标题
+          postTitle.value = filename.replace(/\.(md|markdown|txt)$/i, '');
+        }
+      }
+
+      // 如果没有摘要，取第一段文字
+      if (!postExcerpt.value) {
+        const firstParagraph = content.split('\n\n')[0].replace(/[#*`]/g, '').trim();
+        postExcerpt.value = firstParagraph.substring(0, 100) + (firstParagraph.length > 100 ? '...' : '');
+      }
+
+      // 自动计算阅读时间
+      if (!postReadtime.value) {
+        const wordCount = content.replace(/\s/g, '').length;
+        const readTime = Math.max(1, Math.ceil(wordCount / 400));
+        postReadtime.value = readTime + ' 分钟';
+      }
+
+      // 设置正文内容并切换到 Markdown 模式
+      postContent.value = content.trim();
+      contentMode = 'md';
+      modeMd.classList.add('active');
+      modeHtml.classList.remove('active');
+
+      // 触发预览
+      previewPost();
+    }
   </script>
 </body>
 </html>
