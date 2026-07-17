@@ -2,8 +2,8 @@
 // 个人博客 - 数据与交互逻辑
 // ============================================
 
-// 文章数据
-const posts = [
+// 默认文章数据
+const defaultPosts = [
   {
     id: 1,
     title: '探索现代 Web 开发的未来趋势',
@@ -125,6 +125,17 @@ const posts = [
     `
   }
 ];
+
+// 从 localStorage 读取用户发布的文章并合并
+function getPosts() {
+  const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+  const allPosts = [...savedPosts, ...defaultPosts];
+  return allPosts.filter((post, index, self) =>
+    index === self.findIndex(p => p.id === post.id)
+  );
+}
+
+const posts = getPosts();
 
 // 获取所有分类
 function getCategories() {

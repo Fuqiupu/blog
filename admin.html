@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>博客管理后台</title>
+  <style>
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-dark: #1d4ed8;
+      --color-text: #1f2937;
+      --color-text-light: #6b7280;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-border: #e5e7eb;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg-alt);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* 登录界面 */
+    .login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-card {
+      background: var(--color-bg);
+      padding: 48px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-card__logo {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .login-card__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-card__desc {
+      color: var(--color-text-light);
+      margin-bottom: 32px;
+    }
+
+    .login-card__input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+      margin-bottom: 16px;
+    }
+
+    .login-card__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .login-card__btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .login-card__btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .login-card__error {
+      color: #dc2626;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    /* 管理界面 */
+    .admin-page {
+      display: none;
+    }
+
+    .header {
+      background: var(--color-bg);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 32px;
+    }
+
+    .header__content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .header__logout {
+      padding: 8px 16px;
+      background: var(--color-bg-alt);
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--color-text-light);
+      transition: var(--transition);
+    }
+
+    .header__logout:hover {
+      background: var(--color-border);
+      color: var(--color-text);
+    }
+
+    /* 表单 */
+    .form-section {
+      background: var(--color-bg);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-section__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group__label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group__input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-group__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group__select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .form-group__select:focus {
+      border-color: var(--color-primary);
+    }
+
+    .form-group__textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group__textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group__hint {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin-top: 4px;
+    }
+
+    /* 按钮组 */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-border);
+    }
+
+    /* 预览区域 */
+    .preview-section {
+      background: var(--color-bg);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      margin-top: 24px;
+    }
+
+    .preview-section__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .preview-card {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 24px;
+      background: var(--color-bg-alt);
+    }
+
+    .preview-card__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .preview-card__meta {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin-bottom: 12px;
+    }
+
+    .preview-card__excerpt {
+      font-size: 0.95rem;
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    .preview-card__content {
+      font-size: 0.95rem;
+      color: var(--color-text);
+      line-height: 1.8;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--color-border);
+    }
+
+    .preview-card__content h2 {
+      font-size: 1.1rem;
+      margin: 16px 0 8px;
+    }
+
+    .preview-card__content p {
+      margin-bottom: 12px;
+    }
+
+    .preview-card__content code {
+      background: rgba(37, 99, 235, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    /* 成功提示 */
+    .success-message {
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .login-card {
+        padding: 32px 24px;
+      }
+
+      .form-section, .preview-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录界面 -->
+  <div class="login-page" id="login-page">
+    <div class="login-card">
+      <div class="login-card__logo">📝</div>
+      <h1 class="login-card__title">博客管理后台</h1>
+      <p class="login-card__desc">输入密码登录管理您的博客</p>
+      <div class="login-card__error" id="login-error"></div>
+      <input type="password" class="login-card__input" id="password-input" placeholder="请输入密码" />
+      <button class="login-card__btn" id="login-btn">登录</button>
+    </div>
+  </div>
+
+  <!-- 管理界面 -->
+  <div class="admin-page" id="admin-page">
+    <header class="header">
+      <div class="header__content">
+        <div class="header__title">📝 博客管理后台</div>
+        <button class="header__logout" id="logout-btn">退出登录</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="success-message" id="success-message">
+        ✅ 文章发布成功！刷新博客首页即可看到。
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section__title">发布新文章</h2>
+
+        <div class="form-group">
+          <label class="form-group__label">标题</label>
+          <input type="text" class="form-group__input" id="post-title" placeholder="输入文章标题" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">分类</label>
+          <select class="form-group__select" id="post-category">
+            <option value="技术趋势">技术趋势</option>
+            <option value="前端开发">前端开发</option>
+            <option value="设计思考">设计思考</option>
+            <option value="工具使用">工具使用</option>
+            <option value="性能优化">性能优化</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">日期</label>
+          <input type="date" class="form-group__input" id="post-date" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">阅读时间</label>
+          <input type="text" class="form-group__input" id="post-readtime" placeholder="如：5 分钟" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">摘要</label>
+          <textarea class="form-group__textarea" id="post-excerpt" placeholder="简短描述文章内容（1-2句话）"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label">正文内容</label>
+          <textarea class="form-group__textarea" id="post-content" placeholder="支持 HTML 格式，如 &lt;h2&gt;二级标题&lt;/h2&gt;、&lt;p&gt;段落&lt;/p&gt;、&lt;code&gt;代码&lt;/code&gt;"></textarea>
+          <div class="form-group__hint">支持标签：&lt;h2&gt;二级标题&lt;/h2&gt;、&lt;p&gt;段落&lt;/p&gt;、&lt;code&gt;代码&lt;/code&gt;</div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" id="publish-btn">发布文章</button>
+          <button class="btn btn-secondary" id="preview-btn">预览文章</button>
+          <button class="btn btn-secondary" id="clear-btn">清空表单</button>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <h2 class="preview-section__title">文章预览</h2>
+        <div class="preview-card" id="preview-card">
+          <div class="preview-card__title">预览将显示在这里...</div>
+          <div class="preview-card__meta">分类 · 日期 · 阅读时间</div>
+          <div class="preview-card__excerpt">摘要内容</div>
+          <div class="preview-card__content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 默认密码：admin123（可在代码中修改）
+    const ADMIN_PASSWORD = 'admin123';
+
+    // DOM 元素
+    const loginPage = document.getElementById('login-page');
+    const adminPage = document.getElementById('admin-page');
+    const passwordInput = document.getElementById('password-input');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+    const logoutBtn = document.getElementById('logout-btn');
+    const successMessage = document.getElementById('success-message');
+
+    const postTitle = document.getElementById('post-title');
+    const postCategory = document.getElementById('post-category');
+    const postDate = document.getElementById('post-date');
+    const postReadtime = document.getElementById('post-readtime');
+    const postExcerpt = document.getElementById('post-excerpt');
+    const postContent = document.getElementById('post-content');
+
+    const publishBtn = document.getElementById('publish-btn');
+    const previewBtn = document.getElementById('preview-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const previewCard = document.getElementById('preview-card');
+
+    // 设置默认日期为今天
+    postDate.value = new Date().toISOString().split('T')[0];
+
+    // 登录验证
+    function login() {
+      const password = passwordInput.value.trim();
+      if (password === ADMIN_PASSWORD) {
+        loginPage.style.display = 'none';
+        adminPage.style.display = 'block';
+        loginError.textContent = '';
+      } else {
+        loginError.textContent = '密码错误，请重试';
+        passwordInput.focus();
+      }
+    }
+
+    // 退出登录
+    function logout() {
+      adminPage.style.display = 'none';
+      loginPage.style.display = 'flex';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+
+    // 预览文章
+    function previewPost() {
+      const title = postTitle.value || '未命名文章';
+      const category = postCategory.value;
+      const date = postDate.value || new Date().toISOString().split('T')[0];
+      const readtime = postReadtime.value || '5 分钟';
+      const excerpt = postExcerpt.value || '暂无摘要';
+      const content = postContent.value || '';
+
+      previewCard.querySelector('.preview-card__title').textContent = title;
+      previewCard.querySelector('.preview-card__meta').textContent = `${category} · ${date} · ${readtime}`;
+      previewCard.querySelector('.preview-card__excerpt').textContent = excerpt;
+      previewCard.querySelector('.preview-card__content').innerHTML = content;
+    }
+
+    // 清空表单
+    function clearForm() {
+      postTitle.value = '';
+      postCategory.value = '技术趋势';
+      postDate.value = new Date().toISOString().split('T')[0];
+      postReadtime.value = '';
+      postExcerpt.value = '';
+      postContent.value = '';
+      previewCard.querySelector('.preview-card__title').textContent = '预览将显示在这里...';
+      previewCard.querySelector('.preview-card__meta').textContent = '分类 · 日期 · 阅读时间';
+      previewCard.querySelector('.preview-card__excerpt').textContent = '摘要内容';
+      previewCard.querySelector('.preview-card__content').innerHTML = '';
+      successMessage.classList.remove('show');
+    }
+
+    // 发布文章
+    function publishPost() {
+      const title = postTitle.value.trim();
+      const category = postCategory.value;
+      const date = postDate.value;
+      const readtime = postReadtime.value.trim();
+      const excerpt = postExcerpt.value.trim();
+      const content = postContent.value.trim();
+
+      if (!title || !excerpt || !content) {
+        alert('请填写标题、摘要和正文内容');
+        return;
+      }
+
+      // 创建新文章数据
+      const newPost = {
+        id: Date.now(),
+        title: title,
+        excerpt: excerpt,
+        category: category,
+        date: date,
+        readTime: readtime || '5 分钟',
+        author: '作者',
+        content: content
+      };
+
+      // 保存到 localStorage
+      let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+      posts.unshift(newPost);
+      localStorage.setItem('blogPosts', JSON.stringify(posts));
+
+      // 显示成功消息
+      successMessage.classList.add('show');
+
+      // 清空表单
+      setTimeout(() => {
+        clearForm();
+      }, 1000);
+    }
+
+    // 事件监听
+    loginBtn.addEventListener('click', login);
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+
+    logoutBtn.addEventListener('click', logout);
+
+    publishBtn.addEventListener('click', publishPost);
+    previewBtn.addEventListener('click', previewPost);
+    clearBtn.addEventListener('click', clearForm);
+
+    // 实时预览
+    [postTitle, postCategory, postDate, postReadtime, postExcerpt, postContent].forEach(input => {
+      input.addEventListener('input', previewPost);
+    });
+  </script>
+</body>
+</html>
