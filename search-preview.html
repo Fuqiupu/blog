@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>搜索框设计方案预览（方案三变体）</title>
+  <style>
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-dark: #1d4ed8;
+      --color-text: #1f2937;
+      --color-text-light: #6b7280;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-border: #e5e7eb;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg-alt);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: 48px;
+    }
+
+    .card {
+      background: var(--color-bg);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--color-border);
+    }
+
+    .card__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-primary);
+    }
+
+    .card__desc {
+      font-size: 0.95rem;
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .demo-area {
+      background: var(--color-bg-alt);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    /* ============================================
+       方案三变体A：搜索框带热门搜索标签
+       ============================================ */
+    .search-tags-demo {
+      text-align: center;
+    }
+
+    .search-tags-demo__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .search-tags-demo__subtitle {
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .search-with-tags {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .search-with-tags__input {
+      width: 100%;
+      padding: 16px 48px 16px 24px;
+      border: 2px solid var(--color-border);
+      border-radius: 999px;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-with-tags__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-with-tags__btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 10px 24px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .search-with-tags__btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .hot-tags {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .hot-tag {
+      padding: 4px 14px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-primary);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .hot-tag:hover {
+      background: rgba(37, 99, 235, 0.15);
+      border-color: var(--color-primary);
+    }
+
+    /* ============================================
+       方案三变体B：搜索框带分类筛选
+       ============================================ */
+    .search-filter-demo {
+      text-align: center;
+    }
+
+    .search-filter-demo__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .search-filter-demo__subtitle {
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .search-with-filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 640px;
+      margin: 0 auto;
+      background: white;
+      padding: 4px;
+      border-radius: 999px;
+      border: 2px solid var(--color-border);
+      transition: var(--transition);
+    }
+
+    .search-with-filter:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-with-filter__select {
+      padding: 12px 16px;
+      border: none;
+      background: var(--color-bg-alt);
+      border-radius: 999px;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      cursor: pointer;
+      outline: none;
+      min-width: 120px;
+    }
+
+    .search-with-filter__input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      font-size: 0.95rem;
+      outline: none;
+      background: transparent;
+    }
+
+    .search-with-filter__btn {
+      padding: 10px 20px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .search-with-filter__btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* ============================================
+       方案三变体C：搜索框带搜索历史
+       ============================================ */
+    .search-history-demo {
+      text-align: center;
+    }
+
+    .search-history-demo__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .search-history-demo__subtitle {
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .search-with-history {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .search-with-history__input {
+      width: 100%;
+      padding: 16px 48px 16px 24px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-with-history__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-with-history__icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--color-text-light);
+    }
+
+    .history-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .history-panel.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .history-panel__header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+    }
+
+    .history-panel__clear {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .history-panel__list {
+      padding: 8px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .history-item:hover {
+      background: var(--color-bg-alt);
+    }
+
+    .history-item__icon {
+      margin-right: 10px;
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+    }
+
+    /* ============================================
+       方案三变体D：搜索框带实时建议
+       ============================================ */
+    .search-suggest-demo {
+      text-align: center;
+    }
+
+    .search-suggest-demo__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .search-suggest-demo__subtitle {
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    .search-with-suggest {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .search-with-suggest__input {
+      width: 100%;
+      padding: 16px 48px 16px 24px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-with-suggest__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-with-suggest__icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--color-text-light);
+    }
+
+    .suggest-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .suggest-panel.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .suggest-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .suggest-item:hover {
+      background: var(--color-bg-alt);
+    }
+
+    .suggest-item__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 0.9rem;
+    }
+
+    .suggest-item__title {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .suggest-item__category {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+      margin-top: 2px;
+    }
+
+    /* ============================================
+       新方案：搜索框在文章列表上方
+       ============================================ */
+    .search-list-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-list-demo__filter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+    }
+
+    .search-list-demo__filter input {
+      flex: 1;
+      padding: 10px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .search-list-demo__filter input:focus {
+      border-color: var(--color-primary);
+    }
+
+    .search-list-demo__filter button {
+      padding: 10px 20px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .search-list-demo__articles {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .article-card {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      font-size: 0.9rem;
+    }
+
+    .article-card__title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-text);
+    }
+
+    .article-card__meta {
+      color: var(--color-text-light);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================
+       新方案：侧边栏搜索
+       ============================================ */
+    .sidebar-demo {
+      display: flex;
+      gap: 20px;
+    }
+
+    .sidebar-demo__main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-demo__article {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      font-size: 0.9rem;
+    }
+
+    .sidebar-demo__sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-search {
+      background: white;
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      position: sticky;
+      top: 20px;
+    }
+
+    .sidebar-search__title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-search__input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-search__input:focus {
+      border-color: var(--color-primary);
+    }
+
+    .sidebar-search__btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-search__recent {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .sidebar-search__recent-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .sidebar-search__recent-item {
+      padding: 6px 0;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--color-text);
+      transition: var(--transition);
+    }
+
+    .sidebar-search__recent-item:hover {
+      color: var(--color-primary);
+    }
+
+    @media (max-width: 768px) {
+      .search-with-filter {
+        flex-wrap: wrap;
+        padding: 8px;
+      }
+
+      .search-with-filter__select {
+        width: 100%;
+        border-radius: 999px;
+        margin-bottom: 8px;
+      }
+
+      .search-list-demo__articles {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar-demo {
+        flex-direction: column;
+      }
+
+      .sidebar-demo__sidebar {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 搜索框设计方案预览（方案三变体）</h1>
+    <p class="subtitle">基于方案三（Hero下方独立搜索栏）的变体方案，点击可交互体验</p>
+
+    <!-- 方案三变体A：搜索框带热门搜索标签 -->
+    <div class="card">
+      <h2 class="card__title">方案三A：搜索框带热门搜索标签</h2>
+      <p class="card__desc">搜索框下方展示热门搜索标签，用户可快速点击搜索，提升搜索效率。</p>
+      <div class="demo-area">
+        <div class="search-tags-demo">
+          <h3 class="search-tags-demo__title">记录技术与思考</h3>
+          <p class="search-tags-demo__subtitle">分享前端开发、设计思考与工具使用的经验心得</p>
+          <div class="search-with-tags">
+            <input type="text" class="search-with-tags__input" placeholder="搜索文章标题、内容..." />
+            <button class="search-with-tags__btn">搜索</button>
+          </div>
+          <div class="hot-tags">
+            <span class="hot-tag">JavaScript</span>
+            <span class="hot-tag">CSS Grid</span>
+            <span class="hot-tag">性能优化</span>
+            <span class="hot-tag">Git</span>
+            <span class="hot-tag">Web 开发</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案三变体B：搜索框带分类筛选 -->
+    <div class="card">
+      <h2 class="card__title">方案三B：搜索框带分类筛选</h2>
+      <p class="card__desc">搜索框左侧集成分类下拉菜单，支持在指定分类内搜索，精准定位内容。</p>
+      <div class="demo-area">
+        <div class="search-filter-demo">
+          <h3 class="search-filter-demo__title">记录技术与思考</h3>
+          <p class="search-filter-demo__subtitle">分享前端开发、设计思考与工具使用的经验心得</p>
+          <div class="search-with-filter">
+            <select class="search-with-filter__select">
+              <option value="all">全部分类</option>
+              <option value="tech">技术趋势</option>
+              <option value="frontend">前端开发</option>
+              <option value="design">设计思考</option>
+              <option value="tools">工具使用</option>
+            </select>
+            <input type="text" class="search-with-filter__input" placeholder="搜索文章..." />
+            <button class="search-with-filter__btn">🔍</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案三变体C：搜索框带搜索历史 -->
+    <div class="card">
+      <h2 class="card__title">方案三C：搜索框带搜索历史</h2>
+      <p class="card__desc">点击搜索框展开搜索历史记录面板，支持快速复用之前的搜索关键词。</p>
+      <div class="demo-area">
+        <div class="search-history-demo">
+          <h3 class="search-history-demo__title">记录技术与思考</h3>
+          <p class="search-history-demo__subtitle">分享前端开发、设计思考与工具使用的经验心得</p>
+          <div class="search-with-history">
+            <input type="text" class="search-with-history__input" placeholder="搜索文章标题、内容..." id="history-input" />
+            <span class="search-with-history__icon">🔍</span>
+            <div class="history-panel" id="history-panel">
+              <div class="history-panel__header">
+                <span>搜索历史</span>
+                <button class="history-panel__clear" id="clear-history">清除</button>
+              </div>
+              <div class="history-panel__list">
+                <div class="history-item"><span class="history-item__icon">📜</span>JavaScript</div>
+                <div class="history-item"><span class="history-item__icon">📜</span>CSS Grid 布局</div>
+                <div class="history-item"><span class="history-item__icon">📜</span>性能优化策略</div>
+                <div class="history-item"><span class="history-item__icon">📜</span>Git 工作流</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案三变体D：搜索框带实时建议 -->
+    <div class="card">
+      <h2 class="card__title">方案三D：搜索框带实时建议</h2>
+      <p class="card__desc">输入时实时展示匹配的文章建议，支持快速跳转，提升搜索体验。</p>
+      <div class="demo-area">
+        <div class="search-suggest-demo">
+          <h3 class="search-suggest-demo__title">记录技术与思考</h3>
+          <p class="search-suggest-demo__subtitle">分享前端开发、设计思考与工具使用的经验心得</p>
+          <div class="search-with-suggest">
+            <input type="text" class="search-with-suggest__input" placeholder="搜索文章标题、内容..." id="suggest-input" />
+            <span class="search-with-suggest__icon">🔍</span>
+            <div class="suggest-panel" id="suggest-panel">
+              <div class="suggest-item">
+                <span class="suggest-item__icon">📝</span>
+                <div>
+                  <div class="suggest-item__title">CSS Grid 布局完全指南</div>
+                  <div class="suggest-item__category">前端开发</div>
+                </div>
+              </div>
+              <div class="suggest-item">
+                <span class="suggest-item__icon">📝</span>
+                <div>
+                  <div class="suggest-item__title">JavaScript 异步编程深入理解</div>
+                  <div class="suggest-item__category">前端开发</div>
+                </div>
+              </div>
+              <div class="suggest-item">
+                <span class="suggest-item__icon">📝</span>
+                <div>
+                  <div class="suggest-item__title">探索现代 Web 开发的未来趋势</div>
+                  <div class="suggest-item__category">技术趋势</div>
+                </div>
+              </div>
+              <div class="suggest-item">
+                <span class="suggest-item__icon">📝</span>
+                <div>
+                  <div class="suggest-item__title">性能优化：从首屏加载说起</div>
+                  <div class="suggest-item__category">性能优化</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新方案：搜索框在文章列表上方 -->
+    <div class="card">
+      <h2 class="card__title">新方案：搜索框在文章列表上方</h2>
+      <p class="card__desc">搜索框作为文章列表的筛选栏，与分类导航并列，适合内容密集型页面。</p>
+      <div class="demo-area">
+        <div class="search-list-demo">
+          <div class="search-list-demo__filter">
+            <input type="text" placeholder="搜索文章..." />
+            <button>搜索</button>
+          </div>
+          <div class="search-list-demo__articles">
+            <div class="article-card">
+              <div class="article-card__title">CSS Grid 布局完全指南</div>
+              <div class="article-card__meta">前端开发 · 2026-07-05</div>
+            </div>
+            <div class="article-card">
+              <div class="article-card__title">JavaScript 异步编程深入理解</div>
+              <div class="article-card__meta">前端开发 · 2026-06-28</div>
+            </div>
+            <div class="article-card">
+              <div class="article-card__title">探索现代 Web 开发的未来趋势</div>
+              <div class="article-card__meta">技术趋势 · 2026-07-10</div>
+            </div>
+            <div class="article-card">
+              <div class="article-card__title">设计简洁高效的用户界面</div>
+              <div class="article-card__meta">设计思考 · 2026-06-20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新方案：侧边栏搜索 -->
+    <div class="card">
+      <h2 class="card__title">新方案：侧边栏搜索</h2>
+      <p class="card__desc">搜索框放在侧边栏，固定定位，适合双栏布局的博客，不占用主内容区域。</p>
+      <div class="demo-area">
+        <div class="sidebar-demo">
+          <div class="sidebar-demo__main">
+            <div class="sidebar-demo__article">
+              <strong>CSS Grid 布局完全指南</strong>
+              <p style="font-size: 0.85rem; color: var(--color-text-light); margin-top: 4px;">CSS Grid 是现代 Web 布局的强大工具...</p>
+            </div>
+            <div class="sidebar-demo__article">
+              <strong>JavaScript 异步编程深入理解</strong>
+              <p style="font-size: 0.85rem; color: var(--color-text-light); margin-top: 4px;">从回调到 Promise，再到 async/await...</p>
+            </div>
+            <div class="sidebar-demo__article">
+              <strong>探索现代 Web 开发的未来趋势</strong>
+              <p style="font-size: 0.85rem; color: var(--color-text-light); margin-top: 4px;">从 WebAssembly 到边缘计算...</p>
+            </div>
+          </div>
+          <div class="sidebar-demo__sidebar">
+            <div class="sidebar-search">
+              <div class="sidebar-search__title">搜索文章</div>
+              <input type="text" class="sidebar-search__input" placeholder="输入关键词..." />
+              <button class="sidebar-search__btn">搜索</button>
+              <div class="sidebar-search__recent">
+                <div class="sidebar-search__recent-title">最近搜索</div>
+                <div class="sidebar-search__recent-item">JavaScript</div>
+                <div class="sidebar-search__recent-item">CSS Grid</div>
+                <div class="sidebar-search__recent-item">性能优化</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 选择提示 -->
+    <div class="card" style="text-align: center; background: var(--color-primary); color: white; border: none;">
+      <h2 style="color: white;">您喜欢哪种方案？</h2>
+      <p style="color: rgba(255,255,255,0.85); margin-top: 8px;">请告诉我您的选择，我会将其应用到博客首页！</p>
+    </div>
+  </div>
+
+  <script>
+    // 方案三变体A：热门标签点击
+    document.querySelectorAll('.hot-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const input = tag.closest('.search-with-tags').querySelector('input');
+        input.value = tag.textContent;
+        input.focus();
+      });
+    });
+
+    // 方案三变体C：搜索历史面板
+    const historyInput = document.getElementById('history-input');
+    const historyPanel = document.getElementById('history-panel');
+    const clearHistory = document.getElementById('clear-history');
+
+    historyInput.addEventListener('focus', () => {
+      historyPanel.classList.add('active');
+    });
+
+    historyInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        historyPanel.classList.remove('active');
+      }, 200);
+    });
+
+    clearHistory.addEventListener('click', (e) => {
+      e.stopPropagation();
+      historyPanel.querySelector('.history-panel__list').innerHTML = '';
+    });
+
+    document.querySelectorAll('.history-item').forEach(item => {
+      item.addEventListener('click', () => {
+        historyInput.value = item.textContent.trim();
+        historyPanel.classList.remove('active');
+        historyInput.focus();
+      });
+    });
+
+    // 方案三变体D：实时建议面板
+    const suggestInput = document.getElementById('suggest-input');
+    const suggestPanel = document.getElementById('suggest-panel');
+
+    suggestInput.addEventListener('focus', () => {
+      suggestPanel.classList.add('active');
+    });
+
+    suggestInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        suggestPanel.classList.remove('active');
+      }, 200);
+    });
+
+    suggestInput.addEventListener('input', () => {
+      if (suggestInput.value) {
+        suggestPanel.classList.add('active');
+      }
+    });
+
+    document.querySelectorAll('.suggest-item').forEach(item => {
+      item.addEventListener('click', () => {
+        suggestInput.value = item.querySelector('.suggest-item__title').textContent;
+        suggestPanel.classList.remove('active');
+        suggestInput.focus();
+      });
+    });
+  </script>
+</body>
+</html>

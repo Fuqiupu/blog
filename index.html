@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="个人博客 - 分享技术与思考" />
+  <title>个人博客</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 导航栏 -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="nav__logo">技术<span>笔记</span></a>
+        <ul class="nav__menu" id="nav-menu">
+          <li><a href="index.html" class="nav__link active">首页</a></li>
+          <li><a href="about.html" class="nav__link">关于</a></li>
+        </ul>
+        <button class="menu-toggle" id="menu-toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero 区域 -->
+  <section class="hero">
+    <h1 class="hero__title">记录技术与思考</h1>
+    <p class="hero__subtitle">分享前端开发、设计思考与工具使用的经验心得</p>
+  </section>
+
+  <!-- 搜索栏 -->
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="search-input" class="search-bar__input" placeholder="搜索文章标题、内容..." />
+      <button id="search-clear" class="search-bar__clear" style="display:none;" aria-label="清除搜索">&times;</button>
+    </div>
+  </div>
+
+  <!-- 分类导航 -->
+  <div class="container">
+    <div class="category-nav" id="category-nav"></div>
+  </div>
+
+  <!-- 文章列表 -->
+  <main class="posts-section">
+    <div class="container">
+      <h2 class="section-title">最新文章</h2>
+      <div class="posts-grid" id="posts-container"></div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <p class="footer__copyright">&copy; 2026 技术笔记. All rights reserved.</p>
+        <div class="footer__social">
+          <a href="#" title="GitHub">GH</a>
+          <a href="#" title="Twitter">TW</a>
+          <a href="#" title="Email">@</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

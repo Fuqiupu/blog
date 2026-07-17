@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>搜索图标风格预览</title>
+  <style>
+    :root {
+      --color-primary: #2563eb;
+      --color-primary-dark: #1d4ed8;
+      --color-text: #1f2937;
+      --color-text-light: #6b7280;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-border: #e5e7eb;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg-alt);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--color-bg);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--color-border);
+    }
+
+    .card__title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--color-primary);
+    }
+
+    .card__desc {
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      margin-bottom: 20px;
+    }
+
+    .demo-area {
+      background: var(--color-bg-alt);
+      border-radius: 8px;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ===== 公共搜索栏样式 ===== */
+    .search-bar {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .search-bar__input {
+      width: 100%;
+      padding: 14px 44px 14px 20px;
+      border: 2px solid var(--color-border);
+      border-radius: 999px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-bg);
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-bar__input::placeholder {
+      color: #9ca3af;
+    }
+
+    .search-bar__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-bar__btn {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: var(--transition);
+      padding: 0;
+    }
+
+    .search-bar__btn:hover {
+      background: var(--color-bg-alt);
+    }
+
+    .search-bar__btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--color-text-light);
+      transition: var(--transition);
+    }
+
+    .search-bar__btn:hover svg {
+      stroke: var(--color-primary);
+    }
+
+    /* ===== 方案1：无图标（当前） ===== */
+    .search-plain .search-bar__input {
+      padding-right: 44px;
+    }
+
+    .search-plain .search-bar__btn {
+      font-size: 1.4rem;
+      color: var(--color-text-light);
+      line-height: 1;
+    }
+
+    .search-plain .search-bar__btn:hover {
+      color: var(--color-primary);
+    }
+
+    /* ===== 方案2：SVG 搜索图标 ===== */
+    .search-svg-left .search-bar__input {
+      padding-left: 48px;
+      padding-right: 44px;
+    }
+
+    .search-svg-left .search-bar__icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-svg-left .search-bar__icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--color-text-light);
+    }
+
+    /* ===== 方案3：搜索图标 + 清除按钮 ===== */
+    .search-dual .search-bar__input {
+      padding-left: 48px;
+      padding-right: 44px;
+    }
+
+    .search-dual .search-bar__icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-dual .search-bar__icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--color-text-light);
+    }
+
+    /* ===== 方案4：圆角矩形搜索框 + 图标 ===== */
+    .search-rounded .search-bar__input {
+      padding-left: 48px;
+      padding-right: 16px;
+      border-radius: 12px;
+    }
+
+    .search-rounded .search-bar__icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-rounded .search-bar__icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--color-text-light);
+    }
+
+    /* ===== 方案5：搜索图标在右侧（按钮样式） ===== */
+    .search-btn-right .search-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-btn-right .search-bar__input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 999px;
+    }
+
+    .search-btn-right .search-bar__submit {
+      padding: 0 24px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .search-btn-right .search-bar__submit:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .search-btn-right .search-bar__submit svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+    }
+
+    /* ===== 选中提示 ===== */
+    .pick-one {
+      text-align: center;
+      padding: 24px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--radius);
+      margin-top: 12px;
+    }
+
+    .pick-one h3 {
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    .pick-one p {
+      opacity: 0.85;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .card { padding: 20px; }
+      .demo-area { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔎 搜索图标风格预览</h1>
+    <p class="subtitle">5 种搜索栏图标设计方案，选择您喜欢的风格</p>
+
+    <!-- 方案1：当前方案（无搜索图标，仅×清除） -->
+    <div class="card">
+      <div class="card__title">方案 1：当前方案（文字清除按钮）</div>
+      <div class="card__desc">无搜索图标，清除按钮使用文字「×」符号</div>
+      <div class="demo-area">
+        <div class="search-bar search-plain">
+          <input type="text" class="search-bar__input" placeholder="搜索文章标题、内容..." value="JavaScript" />
+          <button class="search-bar__btn">&times;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案2：左侧 SVG 搜索图标 + 右侧清除 -->
+    <div class="card">
+      <div class="card__title">方案 2：左侧 SVG 搜索图标</div>
+      <div class="card__desc">搜索框左侧放置 SVG 搜索图标，右侧保留 SVG 清除按钮，风格统一</div>
+      <div class="demo-area">
+        <div class="search-bar search-svg-left">
+          <span class="search-bar__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input type="text" class="search-bar__input" placeholder="搜索文章标题、内容..." />
+          <button class="search-bar__btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案3：双图标（左搜索 + 右清除） -->
+    <div class="card">
+      <div class="card__title">方案 3：双图标 + 细线风格</div>
+      <div class="card__desc">更细的线条（1.5px），更轻盈的视觉效果</div>
+      <div class="demo-area">
+        <div class="search-bar search-dual">
+          <span class="search-bar__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input type="text" class="search-bar__input" placeholder="搜索文章标题、内容..." />
+          <button class="search-bar__btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案4：圆角矩形 + 图标 -->
+    <div class="card">
+      <div class="card__title">方案 4：圆角矩形搜索框</div>
+      <div class="card__desc">不使用胶囊形（999px），改用 12px 圆角，配合图标更显现代</div>
+      <div class="demo-area">
+        <div class="search-bar search-rounded">
+          <span class="search-bar__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input type="text" class="search-bar__input" placeholder="搜索文章标题、内容..." />
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案5：搜索按钮在右侧 -->
+    <div class="card">
+      <div class="card__title">方案 5：搜索按钮在右侧</div>
+      <div class="card__desc">输入框 + 搜索按钮的组合，按钮内置图标，操作更明确</div>
+      <div class="demo-area">
+        <div class="search-bar search-btn-right">
+          <input type="text" class="search-bar__input" placeholder="搜索文章标题、内容..." />
+          <button class="search-bar__submit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            搜索
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pick-one">
+      <h3>请选择您喜欢的方案</h3>
+      <p>告诉我编号，我会应用到博客首页</p>
+    </div>
+  </div>
+</body>
+</html>

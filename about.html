@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="关于作者 - 个人博客" />
+  <title>关于 - 个人博客</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 导航栏 -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="nav__logo">技术<span>笔记</span></a>
+        <ul class="nav__menu" id="nav-menu">
+          <li><a href="index.html" class="nav__link">首页</a></li>
+          <li><a href="about.html" class="nav__link active">关于</a></li>
+        </ul>
+        <button class="menu-toggle" id="menu-toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 关于页内容 -->
+  <main class="about-page">
+    <div class="container">
+      <div class="about">
+        <!-- 头部信息 -->
+        <div class="about__header">
+          <div class="about__avatar">A</div>
+          <h1 class="about__name">作者</h1>
+          <p class="about__tagline">前端开发者 · 技术写作者 · 终身学习者</p>
+        </div>
+
+        <!-- 简介 -->
+        <section class="about__section">
+          <h2 class="about__section-title">关于我</h2>
+          <p class="about__text">
+            你好，我是一名热爱技术的前端开发者。专注于 Web 开发领域，喜欢探索新技术，也乐于将学到的东西分享出来。
+          </p>
+          <p class="about__text">
+            这个博客是我记录学习笔记和思考的地方，内容涵盖前端开发、设计思考、工具使用等方面。希望这里的内容能对你有所帮助。
+          </p>
+        </section>
+
+        <!-- 技能 -->
+        <section class="about__section">
+          <h2 class="about__section-title">技能栈</h2>
+          <div class="skills">
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Vue</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">响应式设计</span>
+            <span class="skill-tag">Web 性能优化</span>
+          </div>
+        </section>
+
+        <!-- 联系方式 -->
+        <section class="about__section">
+          <h2 class="about__section-title">联系方式</h2>
+          <div class="contact-list">
+            <div class="contact-item">
+              <div class="contact-item__icon">@</div>
+              <div>
+                <div class="contact-item__label">邮箱</div>
+                <div class="contact-item__value">hello@example.com</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon">G</div>
+              <div>
+                <div class="contact-item__label">GitHub</div>
+                <div class="contact-item__value">github.com/username</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon">T</div>
+              <div>
+                <div class="contact-item__label">Twitter</div>
+                <div class="contact-item__value">@username</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <p class="footer__copyright">&copy; 2026 技术笔记. All rights reserved.</p>
+        <div class="footer__social">
+          <a href="#" title="GitHub">GH</a>
+          <a href="#" title="Twitter">TW</a>
+          <a href="#" title="Email">@</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
