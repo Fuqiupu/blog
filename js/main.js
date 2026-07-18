@@ -150,13 +150,22 @@ async function loadCloudPosts() {
   return [];
 }
 
-// 获取所有文章（合并云端和本地）
+// 获取所有文章（合并云端和本地，去重）
 function getAllPosts() {
   const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
   const allPosts = [...cloudPosts, ...savedPosts];
-  return allPosts.filter((post, index, self) =>
+  // 第一轮：按 id 去重
+  const dedupedById = allPosts.filter((post, index, self) =>
     index === self.findIndex(p => p.id === post.id)
   );
+  // 第二轮：按标题去重（防止云同步导致同文章不同 id 重复）
+  const seenTitles = new Set();
+  return dedupedById.filter(post => {
+    const key = post.title.trim().toLowerCase();
+    if (seenTitles.has(key)) return false;
+    seenTitles.add(key);
+    return true;
+  });
 }
 
 let posts = getAllPosts();
