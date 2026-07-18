@@ -800,6 +800,21 @@
         </div>
       </div>
 
+      <!-- 云端同步设置 -->
+      <div class="preview-section" id="sync-settings-section">
+        <h2 class="preview-section__title">云端同步设置</h2>
+        <div class="form-group">
+          <label class="form-group__label">GitHub Token</label>
+          <input type="password" class="form-group__input" id="github-token-input" placeholder="输入 GitHub Personal Access Token" />
+          <p class="form-group__hint">
+            Token 用于将文章同步到 GitHub 仓库，实现多设备数据共享。<br>
+            获取方式：GitHub → Settings → Developer settings → Personal access tokens → 生成新 token（需勾选 repo 权限）
+          </p>
+        </div>
+        <button class="btn btn-primary" id="save-token-btn" onclick="saveToken()">保存 Token</button>
+        <p id="token-status" style="margin-top: 12px; font-size: 0.9rem;"></p>
+      </div>
+
       <!-- 分类管理区域 -->
       <div class="preview-section" id="category-section">
         <h2 class="preview-section__title">分类管理</h2>
@@ -815,6 +830,12 @@
       <!-- 文章管理区域 -->
       <div class="preview-section" id="manage-section">
         <h2 class="preview-section__title">文章管理</h2>
+        <div style="margin-bottom: 16px;">
+          <button class="btn btn-primary" id="sync-cloud-btn" onclick="syncAllToCloud()" style="width: 100%;">同步本地文章到云端</button>
+          <p style="font-size: 0.85rem; color: #6b7280; margin-top: 8px; text-align: center;">
+            点击此按钮将本地文章上传到云端，同步后所有设备都能看到
+          </p>
+        </div>
         <div class="manage-list" id="manage-list">
           <div class="manage-empty">暂无文章</div>
         </div>
@@ -825,6 +846,52 @@
   <script>
     // 默认密码：admin123（可在代码中修改）
     const ADMIN_PASSWORD = 'admin123';
+
+    // GitHub 配置（用于云端同步文章）
+    // Token 从 localStorage 读取，首次使用需在后台设置中输入
+    const GITHUB_CONFIG = {
+      owner: 'Fuqiupu',
+      repo: 'blog',
+      branch: 'main',
+      path: 'posts.json'
+    };
+
+    function getGithubToken() {
+      return localStorage.getItem('githubToken') || '';
+    }
+
+    function setGithubToken(token) {
+      localStorage.setItem('githubToken', token);
+    }
+
+    // 保存 GitHub Token
+    function saveToken() {
+      const tokenInput = document.getElementById('github-token-input');
+      const tokenStatus = document.getElementById('token-status');
+      const token = tokenInput.value.trim();
+      if (!token) {
+        tokenStatus.textContent = '请输入 Token';
+        tokenStatus.style.color = '#dc2626';
+        return;
+      }
+      setGithubToken(token);
+      tokenInput.value = '';
+      tokenStatus.textContent = '✅ Token 已保存，云端同步功能已启用';
+      tokenStatus.style.color = '#16a34a';
+    }
+
+    // 检查 Token 状态
+    function checkTokenStatus() {
+      const tokenStatus = document.getElementById('token-status');
+      const token = getGithubToken();
+      if (token) {
+        tokenStatus.textContent = '✅ 已配置 GitHub Token，云端同步功能已启用';
+        tokenStatus.style.color = '#16a34a';
+      } else {
+        tokenStatus.textContent = '⚠️ 未配置 Token，文章仅保存在本地，其他设备无法看到。请输入 Token 以启用云端同步。';
+        tokenStatus.style.color = '#f59e0b';
+      }
+    }
 
     // 内容模式：md 或 html
     let contentMode = 'md';
@@ -987,6 +1054,7 @@
         loginPage.style.display = 'none';
         adminPage.style.display = 'block';
         loginError.textContent = '';
+        checkTokenStatus();
         renderCategorySelect();
         renderCategoryManageList();
         renderManageList();
@@ -1098,6 +1166,16 @@
 
       // 显示成功消息
       successMessage.classList.add('show');
+      successMessage.textContent = '✅ 文章发布成功！正在同步到云端...';
+
+      // 同步到云端（GitHub API）
+      syncToCloud(posts).then(success => {
+        if (success) {
+          successMessage.textContent = '✅ 文章发布成功！已同步到云端，所有设备可见。';
+        } else {
+          successMessage.textContent = '✅ 文章已保存到本地，但云端同步失败。可点击"同步到云端"按钮重试。';
+        }
+      });
 
       // 刷新文章列表
       renderManageList();
@@ -1105,7 +1183,111 @@
       // 清空表单
       setTimeout(() => {
         clearForm();
-      }, 1000);
+      }, 2000);
+    }
+
+    // ============================================
+    // GitHub API 云端同步
+    // ============================================
+
+    // 获取云端文章列表
+    async function fetchCloudPosts() {
+      const token = getGithubToken();
+      if (!token) {
+        console.log('未设置 GitHub Token，跳过云端同步');
+        return { posts: [], sha: null };
+      }
+      try {
+        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const content = atob(data.content.replace(/\n/g, ''));
+          return { posts: JSON.parse(content), sha: data.sha };
+        }
+        return { posts: [], sha: null };
+      } catch (e) {
+        console.error('获取云端文章失败:', e);
+        return { posts: [], sha: null };
+      }
+    }
+
+    // 同步文章到云端
+    async function syncToCloud(localPosts) {
+      const token = getGithubToken();
+      if (!token) {
+        console.log('未设置 GitHub Token，跳过云端同步');
+        return false;
+      }
+      try {
+        const { posts: cloudPosts, sha } = await fetchCloudPosts();
+
+        // 合并云端和本地文章（去重）
+        const merged = [...cloudPosts];
+        localPosts.forEach(localPost => {
+          const existIndex = merged.findIndex(p => p.id === localPost.id);
+          if (existIndex !== -1) {
+            merged[existIndex] = localPost;
+          } else {
+            merged.unshift(localPost);
+          }
+        });
+
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null, 2))));
+        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: '同步文章数据',
+            content: content,
+            sha: sha,
+            branch: GITHUB_CONFIG.branch
+          })
+        });
+
+        return response.ok;
+      } catch (e) {
+        console.error('同步到云端失败:', e);
+        return false;
+      }
+    }
+
+    // 同步所有本地文章到云端
+    async function syncAllToCloud() {
+      const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+      if (localPosts.length === 0) {
+        alert('本地没有需要同步的文章');
+        return;
+      }
+
+      const syncBtn = document.getElementById('sync-cloud-btn');
+      if (syncBtn) {
+        syncBtn.textContent = '同步中...';
+        syncBtn.disabled = true;
+      }
+
+      const success = await syncToCloud(localPosts);
+      if (success) {
+        alert(`成功同步 ${localPosts.length} 篇文章到云端！\n现在所有设备都可以看到这些文章了。`);
+      } else {
+        alert('同步失败，请检查网络连接或 GitHub Token 是否有效。');
+      }
+
+      if (syncBtn) {
+        syncBtn.textContent = '同步本地文章到云端';
+        syncBtn.disabled = false;
+      }
     }
 
     // 渲染文章管理列表
@@ -1143,6 +1325,13 @@
       let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
       posts = posts.filter(post => post.id !== id);
       localStorage.setItem('blogPosts', JSON.stringify(posts));
+
+      // 同步删除到云端
+      syncToCloud(posts).then(success => {
+        if (success) {
+          console.log('删除已同步到云端');
+        }
+      });
 
       renderManageList();
     }

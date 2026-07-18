@@ -24,7 +24,7 @@ function getCategories() {
 function getAllCategories() {
   const configCategories = getCategories();
   const postCategories = new Set();
-  const allPosts = getPosts();
+  const allPosts = getAllPosts();
   allPosts.forEach(post => postCategories.add(post.category));
   const allCategories = [...new Set([...configCategories, ...postCategories])];
   return allCategories.sort((a, b) => {
@@ -219,17 +219,43 @@ function getPosts() {
   );
 }
 
-const posts = getPosts();
+// 云端文章数据（通过 fetch 异步加载）
+let cloudPosts = [];
+
+// 从云端加载文章数据
+async function loadCloudPosts() {
+  try {
+    const response = await fetch('posts.json?t=' + Date.now());
+    if (response.ok) {
+      cloudPosts = await response.json();
+      return cloudPosts;
+    }
+  } catch (e) {
+    console.log('云端文章加载失败，使用本地数据', e);
+  }
+  return [];
+}
+
+// 获取所有文章（合并云端、本地、默认）
+function getAllPosts() {
+  const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+  const allPosts = [...cloudPosts, ...savedPosts, ...defaultPosts];
+  return allPosts.filter((post, index, self) =>
+    index === self.findIndex(p => p.id === post.id)
+  );
+}
+
+let posts = getAllPosts();
 
 // 根据 ID 获取文章
 function getPostById(id) {
-  return posts.find(post => post.id === parseInt(id));
+  return getAllPosts().find(post => post.id === parseInt(id));
 }
 
 // 根据分类获取文章
 function getPostsByCategory(category) {
-  if (!category || category === '全部') return posts;
-  return posts.filter(post => post.category === category);
+  if (!category || category === '全部') return getAllPosts();
+  return getAllPosts().filter(post => post.category === category);
 }
 
 // 格式化日期
@@ -245,7 +271,8 @@ function formatDate(dateStr) {
 function searchPosts(keyword) {
   if (!keyword || !keyword.trim()) return null;
   const kw = keyword.trim().toLowerCase();
-  return posts.filter(post =>
+  const allPosts = getAllPosts();
+  return allPosts.filter(post =>
     post.title.toLowerCase().includes(kw) ||
     post.excerpt.toLowerCase().includes(kw) ||
     post.category.toLowerCase().includes(kw) ||
@@ -427,8 +454,11 @@ function initMobileNav() {
 // ============================================
 // 页面初始化
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initMobileNav();
+  // 先加载云端文章数据
+  await loadCloudPosts();
+  posts = getAllPosts();
   initHome();
   initPostDetail();
 });
