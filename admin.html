@@ -1287,7 +1287,13 @@
         });
         if (response.ok) {
           const data = await response.json();
-          const content = atob(data.content.replace(/\n/g, ''));
+          // 正确解码 base64 → UTF-8（修复中文乱码问题）
+          const binary = atob(data.content.replace(/\n/g, ''));
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          const content = new TextDecoder('utf-8').decode(bytes);
           return { posts: JSON.parse(content), sha: data.sha };
         }
         return { posts: [], sha: null };
