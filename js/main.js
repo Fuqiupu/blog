@@ -20,6 +20,25 @@ function getCategories() {
   return [...defaultCategories];
 }
 
+// 获取所有实际使用的分类（包括配置的分类和文章中使用的分类）
+function getAllCategories() {
+  const configCategories = getCategories();
+  const postCategories = new Set();
+  const allPosts = getPosts();
+  allPosts.forEach(post => postCategories.add(post.category));
+  const allCategories = [...new Set([...configCategories, ...postCategories])];
+  return allCategories.sort((a, b) => {
+    const configIndexA = configCategories.indexOf(a);
+    const configIndexB = configCategories.indexOf(b);
+    if (configIndexA !== -1 && configIndexB !== -1) {
+      return configIndexA - configIndexB;
+    }
+    if (configIndexA !== -1) return -1;
+    if (configIndexB !== -1) return 1;
+    return a.localeCompare(b, 'zh-CN');
+  });
+}
+
 // 保存分类列表到 localStorage
 function saveCategories(categories) {
   localStorage.setItem('blogCategories', JSON.stringify(categories));
@@ -258,7 +277,7 @@ function initHome() {
   // 渲染分类导航
   function renderCategories() {
     if (!categoryNav) return;
-    const categories = ['全部', ...getCategories()];
+    const categories = ['全部', ...getAllCategories()];
     categoryNav.innerHTML = categories.map(cat => `
       <button class="category-btn ${cat === currentCategory ? 'active' : ''}" data-category="${cat}">
         ${cat}

@@ -546,6 +546,16 @@
       color: white;
     }
 
+    .manage-item__btn--edit {
+      background: rgba(245, 158, 11, 0.08);
+      color: #f59e0b;
+    }
+
+    .manage-item__btn--edit:hover {
+      background: #f59e0b;
+      color: white;
+    }
+
     /* 分类管理 */
     .category-manage-list {
       display: flex;
@@ -1018,6 +1028,8 @@
     // 清空表单
     function clearForm() {
       postTitle.value = '';
+      delete postTitle.dataset.editingId;
+      publishBtn.textContent = '发布文章';
       const categories = getCategories();
       if (categories.length > 0) {
         postCategory.value = categories[0];
@@ -1047,27 +1059,41 @@
         return;
       }
 
-      // 根据模式转换内容为 HTML
       let htmlContent = content;
       if (contentMode === 'md') {
         htmlContent = marked.parse(content);
       }
 
-      // 创建新文章数据
-      const newPost = {
-        id: Date.now(),
-        title: title,
-        excerpt: excerpt,
-        category: category,
-        date: date,
-        readTime: readtime || '5 分钟',
-        author: '作者',
-        content: htmlContent
-      };
-
-      // 保存到 localStorage
       let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      posts.unshift(newPost);
+      const editingId = postTitle.dataset.editingId;
+
+      if (editingId) {
+        const index = posts.findIndex(p => p.id === parseInt(editingId));
+        if (index !== -1) {
+          posts[index] = {
+            ...posts[index],
+            title: title,
+            category: category,
+            date: date,
+            readTime: readtime || '5 分钟',
+            excerpt: excerpt,
+            content: htmlContent
+          };
+        }
+      } else {
+        const newPost = {
+          id: Date.now(),
+          title: title,
+          excerpt: excerpt,
+          category: category,
+          date: date,
+          readTime: readtime || '5 分钟',
+          author: '作者',
+          content: htmlContent
+        };
+        posts.unshift(newPost);
+      }
+
       localStorage.setItem('blogPosts', JSON.stringify(posts));
 
       // 显示成功消息
@@ -1102,6 +1128,7 @@
             </div>
           </div>
           <div class="manage-item__actions">
+            <button class="manage-item__btn manage-item__btn--edit" onclick="editPost(${post.id})">编辑</button>
             <button class="manage-item__btn manage-item__btn--view" onclick="viewPost(${post.id})">查看</button>
             <button class="manage-item__btn manage-item__btn--delete" onclick="deletePost(${post.id})">删除</button>
           </div>
@@ -1123,6 +1150,30 @@
     // 查看文章（跳转到文章页）
     function viewPost(id) {
       window.open(`post.html?id=${id}`, '_blank');
+    }
+
+    // 编辑文章
+    function editPost(id) {
+      const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+      const post = posts.find(p => p.id === id);
+      if (!post) {
+        alert('文章不存在');
+        return;
+      }
+
+      postTitle.value = post.title;
+      postCategory.value = post.category;
+      postDate.value = post.date;
+      postReadtime.value = post.readTime;
+      postExcerpt.value = post.excerpt;
+      postContent.value = post.content;
+
+      postTitle.dataset.editingId = id;
+      publishBtn.textContent = '保存修改';
+
+      previewPost();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // HTML 转义
