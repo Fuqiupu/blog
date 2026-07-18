@@ -351,7 +351,7 @@ function initPostDetail() {
   }
 
   // 动态更新 SEO 标签
-  document.title = `${post.title} - Fuqiupu`;
+  document.title = `${post.title} - 实践录`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute('content', post.excerpt.replace(/<[^>]+>/g, '').substring(0, 160));
   const ogTitle = document.querySelector('meta[property="og:title"]');

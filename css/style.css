@@ -63,6 +63,10 @@
   background: rgba(59, 130, 246, 0.08);
 }
 
+[data-theme="dark"] .nav__logo-accent {
+  stroke: #3b82f6;
+}
+
 /* 重置样式 */
 *,
 *::before,
