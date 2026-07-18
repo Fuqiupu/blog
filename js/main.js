@@ -1,5 +1,5 @@
 // ============================================
-// 个人博客 - 数据与交互逻辑
+// Fuqiupu - 数据与交互逻辑
 // ============================================
 
 // 默认分类列表
@@ -107,137 +107,9 @@ function renameCategory(oldName, newName) {
   return false;
 }
 
-// 默认文章数据
-const defaultPosts = [
-  {
-    id: 1,
-    title: '从零搭建个人独立站：完整指南',
-    excerpt: '从域名注册到网站部署，手把手教你搭建属于自己的个人博客独立站，涵盖技术选型和成本分析。',
-    category: '建站实战',
-    date: '2026-07-15',
-    readTime: '15 分钟',
-    author: '作者',
-    content: `
-      <p>搭建个人独立站是每个创作者都应该考虑的事情。它不仅是你的数字名片，更是你内容资产的真正归属。</p>
-      <h2>为什么要建独立站？</h2>
-      <p>在平台算法主导的时代，拥有自己的独立站点意味着真正掌握内容的分发权和用户关系。</p>
-      <h2>技术选型</h2>
-      <p>从静态站点生成器到全栈框架，选择适合自己的技术栈很重要。对于博客类站点，静态方案是首选。</p>
-      <h2>成本分析</h2>
-      <p>域名每年约 50-100 元，托管可以使用免费的 Vercel、Netlify 或 GitHub Pages，总体成本很低。</p>
-      <h2>总结</h2>
-      <p>动手开始吧，你的独立站就是你在数字世界的根据地。</p>
-    `
-  },
-  {
-    id: 2,
-    title: '量化投资入门：从策略到实盘',
-    excerpt: '量化投资不是神秘的黑箱。本文带你了解量化投资的基本概念、常见策略和实盘注意事项。',
-    category: '量化投资',
-    date: '2026-07-12',
-    readTime: '12 分钟',
-    author: '作者',
-    content: `
-      <p>量化投资是利用数学模型和计算机程序来进行投资决策的方法，它的核心是纪律性和系统性。</p>
-      <h2>什么是量化投资？</h2>
-      <p>简单来说，量化投资就是把你的投资逻辑写成代码，让程序帮你执行，避免情绪化决策。</p>
-      <h2>常见策略类型</h2>
-      <p>趋势跟踪、均值回归、套利策略、多因子模型是最常见的几大量化策略类型。</p>
-      <h2>实盘注意事项</h2>
-      <p>回测不等于实盘，滑点、手续费、流动性都是需要考虑的因素。从小资金开始，逐步验证。</p>
-      <h2>风险提示</h2>
-      <p>投资有风险，入市需谨慎。量化只是工具，不能消除风险，只能更系统地管理风险。</p>
-    `
-  },
-  {
-    id: 3,
-    title: '海外营销：独立站流量获取实战',
-    excerpt: '做跨境电商或海外内容创业，流量是关键。分享 SEO、社交媒体、付费广告等多种获客渠道的实操经验。',
-    category: '海外营销',
-    date: '2026-07-08',
-    readTime: '18 分钟',
-    author: '作者',
-    content: `
-      <p>海外市场虽然竞争激烈，但也充满机会。掌握正确的流量获取方法，你的独立站就能脱颖而出。</p>
-      <h2>SEO 还是流量基石</h2>
-      <p>Google SEO 是最稳定的长期流量来源。关键词研究、内容创作、外链建设三大核心缺一不可。</p>
-      <h2>社交媒体引流</h2>
-      <p>Twitter/X、LinkedIn、Reddit、TikTok 各有特点，找到你的目标用户聚集的平台重点突破。</p>
-      <h2>付费广告入门</h2>
-      <p>Google Ads、Facebook Ads 是最主流的付费渠道。从小预算开始测试，找到盈利的广告素材和受众。</p>
-      <h2>邮件营销的价值</h2>
-      <p>不要忽视邮件列表的价值。它是你完全拥有的用户触达渠道，转化率往往高于其他渠道。</p>
-    `
-  },
-  {
-    id: 4,
-    title: '副业创业：从 0 到 1 的实用指南',
-    excerpt: '想开展副业但不知道从何入手？分享从 idea 验证到产品落地的完整路径，帮你少走弯路。',
-    category: '副业创业',
-    date: '2026-07-03',
-    readTime: '10 分钟',
-    author: '作者',
-    content: `
-      <p>副业不是不务正业，而是给自己多一个选择，多一份抗风险能力。</p>
-      <h2>找到你的方向</h2>
-      <p>从你的技能、兴趣、市场需求三个维度交叉，找到最适合你的副业方向。</p>
-      <h2>验证需求</h2>
-      <p>不要一上来就花几个月做产品。先用最小成本验证需求，比如做个落地页收集意向。</p>
-      <h2>快速交付</h2>
-      <p>MVP（最小可行产品）思维很重要。先交付一个能用的版本，再根据用户反馈迭代。</p>
-      <h2>时间管理</h2>
-      <p>副业最大的挑战是时间。固定时间块、利用碎片时间、提高效率都是必修课。</p>
-    `
-  },
-  {
-    id: 5,
-    title: '探索现代 Web 开发的未来趋势',
-    excerpt: '从 WebAssembly 到边缘计算，Web 开发正在经历前所未有的变革。本文将带你了解 2026 年最值得关注的技术趋势。',
-    category: '技术趋势',
-    date: '2026-06-28',
-    readTime: '8 分钟',
-    author: '作者',
-    content: `
-      <p>Web 开发领域正在以前所未有的速度演进。随着 WebAssembly 的成熟、边缘计算的普及以及 AI 辅助开发的兴起，我们正站在一个新时代的起点。</p>
-      <h2>WebAssembly：超越浏览器的边界</h2>
-      <p>WebAssembly（Wasm）不再仅仅是浏览器中运行 C++ 代码的工具。如今，它已经成为云原生应用的重要组成部分。</p>
-      <h2>边缘计算：更近用户，更快响应</h2>
-      <p>边缘计算将计算能力带到离用户更近的地方，大幅降低了延迟。Cloudflare Workers、Vercel Edge Functions 等平台让开发者能够轻松部署边缘应用。</p>
-      <h2>AI 辅助开发：人机协作的新范式</h2>
-      <p>AI 编程助手已经从实验性工具变成了开发流程的标配。从代码生成到自动化测试，AI 正在重塑我们的工作方式。</p>
-      <h2>结语</h2>
-      <p>未来已来，只是分布不均。作为开发者，保持学习和好奇心，才能在这波浪潮中乘风破浪。</p>
-    `
-  },
-  {
-    id: 6,
-    title: 'Vercel 部署实战：从 GitHub 到上线',
-    excerpt: '详细讲解如何将你的项目通过 Vercel 部署上线，包括 CI/CD、自定义域名、环境变量等配置。',
-    category: '建站实战',
-    date: '2026-06-20',
-    readTime: '9 分钟',
-    author: '作者',
-    content: `
-      <p>Vercel 是前端开发者部署项目的首选平台之一，体验丝滑，功能强大。</p>
-      <h2>为什么选择 Vercel？</h2>
-      <p>自动部署、全球 CDN、边缘函数、预览功能，Vercel 为前端项目提供了开箱即用的最佳实践。</p>
-      <h2>连接 GitHub 仓库</h2>
-      <p>只需几步授权，Vercel 就能自动识别你的项目类型并配置构建命令。</p>
-      <h2>自定义域名</h2>
-      <p>绑定你自己的域名，Vercel 会自动配置 HTTPS 证书，全程无痛。</p>
-      <h2>环境变量配置</h2>
-      <p>敏感信息不要写在代码里，使用环境变量来管理，安全又灵活。</p>
-    `
-  }
-];
-
-// 从 localStorage 读取用户发布的文章并合并
+// 从 localStorage 读取用户发布的文章
 function getPosts() {
-  const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-  const allPosts = [...savedPosts, ...defaultPosts];
-  return allPosts.filter((post, index, self) =>
-    index === self.findIndex(p => p.id === post.id)
-  );
+  return JSON.parse(localStorage.getItem('blogPosts') || '[]');
 }
 
 // 云端文章数据（通过 fetch 异步加载）
@@ -278,10 +150,10 @@ async function loadCloudPosts() {
   return [];
 }
 
-// 获取所有文章（合并云端、本地、默认）
+// 获取所有文章（合并云端和本地）
 function getAllPosts() {
   const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-  const allPosts = [...cloudPosts, ...savedPosts, ...defaultPosts];
+  const allPosts = [...cloudPosts, ...savedPosts];
   return allPosts.filter((post, index, self) =>
     index === self.findIndex(p => p.id === post.id)
   );
@@ -393,9 +265,8 @@ function initHome() {
 
     // 如果云端加载失败，显示提示横幅
     let cloudBanner = '';
-    if (cloudLoadError && filteredPosts.length === getAllPosts().length &&
-        getAllPosts().length <= defaultPosts.length + (JSON.parse(localStorage.getItem('blogPosts') || '[]')).length) {
-      cloudBanner = '<div style="text-align:center;padding:12px 16px;background:#fef3c7;color:#92400e;border-radius:8px;margin-bottom:20px;font-size:0.9rem;">⚠️ 云端数据加载失败，显示本地可用文章。<a href="admin.html" style="color:#2563eb;text-decoration:underline;">前往管理后台同步</a></div>';
+    if (cloudLoadError && filteredPosts.length === 0 && getAllPosts().length === 0) {
+      cloudBanner = '<div style="text-align:center;padding:12px 16px;background:#fef3c7;color:#92400e;border-radius:8px;margin-bottom:20px;font-size:0.9rem;">⚠️ 云端数据加载失败，且本地暂无文章。<a href="admin.html" style="color:#2563eb;text-decoration:underline;">前往管理后台发布</a></div>';
     }
 
     postsContainer.innerHTML = cloudBanner + filteredPosts.map(post => {
@@ -471,7 +342,7 @@ function initPostDetail() {
   }
 
   // 动态更新 SEO 标签
-  document.title = `${post.title} - 技术笔记`;
+  document.title = `${post.title} - Fuqiupu`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute('content', post.excerpt.replace(/<[^>]+>/g, '').substring(0, 160));
   const ogTitle = document.querySelector('meta[property="og:title"]');
