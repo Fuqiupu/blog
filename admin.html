@@ -447,6 +447,105 @@
       background: rgba(37, 99, 235, 0.06);
     }
 
+    /* 文章管理列表 */
+    .manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .manage-empty {
+      text-align: center;
+      color: var(--color-text-light);
+      padding: 32px;
+      font-size: 0.95rem;
+    }
+
+    .manage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .manage-item:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+    }
+
+    .manage-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .manage-item__title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .manage-item__meta {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+    }
+
+    .manage-item__tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-primary);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin-right: 8px;
+    }
+
+    .manage-item__tag--default {
+      background: rgba(107, 114, 128, 0.1);
+      color: var(--color-text-light);
+    }
+
+    .manage-item__actions {
+      display: flex;
+      gap: 8px;
+      margin-left: 16px;
+    }
+
+    .manage-item__btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .manage-item__btn--delete {
+      background: rgba(220, 38, 38, 0.08);
+      color: #dc2626;
+    }
+
+    .manage-item__btn--delete:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    .manage-item__btn--view {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-primary);
+    }
+
+    .manage-item__btn--view:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+
     @media (max-width: 768px) {
       .btn-group {
         flex-direction: column;
@@ -566,6 +665,14 @@
           <div class="preview-card__content"></div>
         </div>
       </div>
+
+      <!-- 文章管理区域 -->
+      <div class="preview-section" id="manage-section">
+        <h2 class="preview-section__title">文章管理</h2>
+        <div class="manage-list" id="manage-list">
+          <div class="manage-empty">暂无文章</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -619,6 +726,7 @@
         loginPage.style.display = 'none';
         adminPage.style.display = 'block';
         loginError.textContent = '';
+        renderManageList();
       } else {
         loginError.textContent = '密码错误，请重试';
         passwordInput.focus();
@@ -709,10 +817,67 @@
       // 显示成功消息
       successMessage.classList.add('show');
 
+      // 刷新文章列表
+      renderManageList();
+
       // 清空表单
       setTimeout(() => {
         clearForm();
       }, 1000);
+    }
+
+    // 渲染文章管理列表
+    function renderManageList() {
+      const manageList = document.getElementById('manage-list');
+      const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+
+      if (savedPosts.length === 0) {
+        manageList.innerHTML = '<div class="manage-empty">暂无已发布的文章，请在上方发布新文章</div>';
+        return;
+      }
+
+      manageList.innerHTML = savedPosts.map(post => `
+        <div class="manage-item">
+          <div class="manage-item__info">
+            <div class="manage-item__title">${escapeHtml(post.title)}</div>
+            <div class="manage-item__meta">
+              <span class="manage-item__tag">${escapeHtml(post.category)}</span>
+              ${escapeHtml(post.date)} · ${escapeHtml(post.readTime)}
+            </div>
+          </div>
+          <div class="manage-item__actions">
+            <button class="manage-item__btn manage-item__btn--view" onclick="viewPost(${post.id})">查看</button>
+            <button class="manage-item__btn manage-item__btn--delete" onclick="deletePost(${post.id})">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 删除文章
+    function deletePost(id) {
+      if (!confirm('确定要删除这篇文章吗？此操作不可恢复。')) return;
+
+      let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+      posts = posts.filter(post => post.id !== id);
+      localStorage.setItem('blogPosts', JSON.stringify(posts));
+
+      renderManageList();
+    }
+
+    // 查看文章（跳转到文章页）
+    function viewPost(id) {
+      window.open(`post.html?id=${id}`, '_blank');
+    }
+
+    // HTML 转义
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     // 事件监听
