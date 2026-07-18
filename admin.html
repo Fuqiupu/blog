@@ -546,6 +546,122 @@
       color: white;
     }
 
+    /* 分类管理 */
+    .category-manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .category-manage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .category-manage-item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .category-manage-item__name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .category-manage-item__actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .category-manage-item__btn {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .category-manage-item__btn--edit {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-primary);
+    }
+
+    .category-manage-item__btn--edit:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .category-manage-item__btn--delete {
+      background: rgba(220, 38, 38, 0.08);
+      color: #dc2626;
+    }
+
+    .category-manage-item__btn--delete:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    .category-add {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .category-add__input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .category-add__input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .category-add__btn {
+      padding: 10px 20px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .category-add__btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .category-manage-empty {
+      text-align: center;
+      color: var(--color-text-light);
+      padding: 24px;
+      font-size: 0.95rem;
+    }
+
+    .category-edit-input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 2px solid var(--color-primary);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      margin-right: 10px;
+    }
+
     @media (max-width: 768px) {
       .btn-group {
         flex-direction: column;
@@ -561,6 +677,14 @@
 
       .form-section, .preview-section {
         padding: 20px;
+      }
+
+      .category-add {
+        flex-direction: column;
+      }
+
+      .category-add__btn {
+        width: 100%;
       }
     }
   </style>
@@ -666,6 +790,18 @@
         </div>
       </div>
 
+      <!-- 分类管理区域 -->
+      <div class="preview-section" id="category-section">
+        <h2 class="preview-section__title">分类管理</h2>
+        <div class="category-add">
+          <input type="text" class="category-add__input" id="new-category-input" placeholder="输入新分类名称" />
+          <button class="category-add__btn" id="add-category-btn">添加分类</button>
+        </div>
+        <div class="category-manage-list" id="category-manage-list">
+          <div class="category-manage-empty">暂无分类</div>
+        </div>
+      </div>
+
       <!-- 文章管理区域 -->
       <div class="preview-section" id="manage-section">
         <h2 class="preview-section__title">文章管理</h2>
@@ -716,6 +852,121 @@
     const modeHtml = document.getElementById('mode-html');
     const contentHint = document.getElementById('content-hint');
 
+    // 分类管理元素
+    const newCategoryInput = document.getElementById('new-category-input');
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    const categoryManageList = document.getElementById('category-manage-list');
+
+    // 默认分类列表
+    const defaultCategories = [
+      '建站实战',
+      '量化投资',
+      '海外营销',
+      '副业创业',
+      '技术趋势'
+    ];
+
+    // 获取分类列表
+    function getCategories() {
+      const saved = localStorage.getItem('blogCategories');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+      return [...defaultCategories];
+    }
+
+    // 保存分类列表
+    function saveCategories(categories) {
+      localStorage.setItem('blogCategories', JSON.stringify(categories));
+    }
+
+    // 渲染分类下拉选项
+    function renderCategorySelect() {
+      const categories = getCategories();
+      postCategory.innerHTML = categories.map(cat =>
+        `<option value="${cat}">${cat}</option>`
+      ).join('');
+    }
+
+    // 渲染分类管理列表
+    function renderCategoryManageList() {
+      const categories = getCategories();
+      if (categories.length === 0) {
+        categoryManageList.innerHTML = '<div class="category-manage-empty">暂无分类，请添加新分类</div>';
+        return;
+      }
+      categoryManageList.innerHTML = categories.map(cat => `
+        <div class="category-manage-item" data-category="${cat}">
+          <span class="category-manage-item__name">${escapeHtml(cat)}</span>
+          <div class="category-manage-item__actions">
+            <button class="category-manage-item__btn category-manage-item__btn--edit" onclick="editCategory('${escapeHtml(cat)}')">编辑</button>
+            <button class="category-manage-item__btn category-manage-item__btn--delete" onclick="deleteCategory('${escapeHtml(cat)}')">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 添加分类
+    function addCategory() {
+      const name = newCategoryInput.value.trim();
+      if (!name) {
+        alert('请输入分类名称');
+        return;
+      }
+      const categories = getCategories();
+      if (categories.includes(name)) {
+        alert('该分类已存在');
+        return;
+      }
+      categories.push(name);
+      saveCategories(categories);
+      newCategoryInput.value = '';
+      renderCategoryManageList();
+      renderCategorySelect();
+    }
+
+    // 删除分类
+    function deleteCategory(name) {
+      if (!confirm(`确定要删除分类「${name}」吗？\n注意：已使用该分类的文章不会被删除，但分类筛选可能受到影响。`)) return;
+      const categories = getCategories();
+      const index = categories.indexOf(name);
+      if (index > -1) {
+        categories.splice(index, 1);
+        saveCategories(categories);
+        renderCategoryManageList();
+        renderCategorySelect();
+      }
+    }
+
+    // 编辑分类
+    function editCategory(oldName) {
+      const newName = prompt('请输入新的分类名称：', oldName);
+      if (!newName || !newName.trim()) return;
+      const trimmedName = newName.trim();
+      if (trimmedName === oldName) return;
+      const categories = getCategories();
+      if (categories.includes(trimmedName)) {
+        alert('该分类名称已存在');
+        return;
+      }
+      const index = categories.indexOf(oldName);
+      if (index > -1) {
+        categories[index] = trimmedName;
+        saveCategories(categories);
+        // 同时更新已发布文章的分类
+        const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+        posts.forEach(post => {
+          if (post.category === oldName) {
+            post.category = trimmedName;
+          }
+        });
+        localStorage.setItem('blogPosts', JSON.stringify(posts));
+        renderCategoryManageList();
+        renderCategorySelect();
+        renderManageList();
+      }
+    }
+
     // 设置默认日期为今天
     postDate.value = new Date().toISOString().split('T')[0];
 
@@ -726,6 +977,8 @@
         loginPage.style.display = 'none';
         adminPage.style.display = 'block';
         loginError.textContent = '';
+        renderCategorySelect();
+        renderCategoryManageList();
         renderManageList();
       } else {
         loginError.textContent = '密码错误，请重试';
@@ -765,7 +1018,10 @@
     // 清空表单
     function clearForm() {
       postTitle.value = '';
-      postCategory.value = '技术趋势';
+      const categories = getCategories();
+      if (categories.length > 0) {
+        postCategory.value = categories[0];
+      }
       postDate.value = new Date().toISOString().split('T')[0];
       postReadtime.value = '';
       postExcerpt.value = '';
@@ -891,6 +1147,12 @@
     publishBtn.addEventListener('click', publishPost);
     previewBtn.addEventListener('click', previewPost);
     clearBtn.addEventListener('click', clearForm);
+
+    // 分类管理事件
+    addCategoryBtn.addEventListener('click', addCategory);
+    newCategoryInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addCategory();
+    });
 
     // 实时预览
     [postTitle, postCategory, postDate, postReadtime, postExcerpt, postContent].forEach(input => {

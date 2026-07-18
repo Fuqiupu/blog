@@ -2,20 +2,165 @@
 // 个人博客 - 数据与交互逻辑
 // ============================================
 
+// 默认分类列表
+const defaultCategories = [
+  '建站实战',
+  '量化投资',
+  '海外营销',
+  '副业创业',
+  '技术趋势'
+];
+
+// 获取分类列表（从 localStorage 读取，没有则使用默认）
+function getCategories() {
+  const saved = localStorage.getItem('blogCategories');
+  if (saved) {
+    return JSON.parse(saved);
+  }
+  return [...defaultCategories];
+}
+
+// 保存分类列表到 localStorage
+function saveCategories(categories) {
+  localStorage.setItem('blogCategories', JSON.stringify(categories));
+}
+
+// 添加分类
+function addCategory(name) {
+  const categories = getCategories();
+  if (!categories.includes(name)) {
+    categories.push(name);
+    saveCategories(categories);
+    return true;
+  }
+  return false;
+}
+
+// 删除分类
+function deleteCategory(name) {
+  const categories = getCategories();
+  const index = categories.indexOf(name);
+  if (index > -1) {
+    categories.splice(index, 1);
+    saveCategories(categories);
+    return true;
+  }
+  return false;
+}
+
+// 重命名分类
+function renameCategory(oldName, newName) {
+  const categories = getCategories();
+  const index = categories.indexOf(oldName);
+  if (index > -1 && !categories.includes(newName)) {
+    categories[index] = newName;
+    saveCategories(categories);
+    const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    posts.forEach(post => {
+      if (post.category === oldName) {
+        post.category = newName;
+      }
+    });
+    localStorage.setItem('blogPosts', JSON.stringify(posts));
+    return true;
+  }
+  return false;
+}
+
 // 默认文章数据
 const defaultPosts = [
   {
     id: 1,
+    title: '从零搭建个人独立站：完整指南',
+    excerpt: '从域名注册到网站部署，手把手教你搭建属于自己的个人博客独立站，涵盖技术选型和成本分析。',
+    category: '建站实战',
+    date: '2026-07-15',
+    readTime: '15 分钟',
+    author: '作者',
+    content: `
+      <p>搭建个人独立站是每个创作者都应该考虑的事情。它不仅是你的数字名片，更是你内容资产的真正归属。</p>
+      <h2>为什么要建独立站？</h2>
+      <p>在平台算法主导的时代，拥有自己的独立站点意味着真正掌握内容的分发权和用户关系。</p>
+      <h2>技术选型</h2>
+      <p>从静态站点生成器到全栈框架，选择适合自己的技术栈很重要。对于博客类站点，静态方案是首选。</p>
+      <h2>成本分析</h2>
+      <p>域名每年约 50-100 元，托管可以使用免费的 Vercel、Netlify 或 GitHub Pages，总体成本很低。</p>
+      <h2>总结</h2>
+      <p>动手开始吧，你的独立站就是你在数字世界的根据地。</p>
+    `
+  },
+  {
+    id: 2,
+    title: '量化投资入门：从策略到实盘',
+    excerpt: '量化投资不是神秘的黑箱。本文带你了解量化投资的基本概念、常见策略和实盘注意事项。',
+    category: '量化投资',
+    date: '2026-07-12',
+    readTime: '12 分钟',
+    author: '作者',
+    content: `
+      <p>量化投资是利用数学模型和计算机程序来进行投资决策的方法，它的核心是纪律性和系统性。</p>
+      <h2>什么是量化投资？</h2>
+      <p>简单来说，量化投资就是把你的投资逻辑写成代码，让程序帮你执行，避免情绪化决策。</p>
+      <h2>常见策略类型</h2>
+      <p>趋势跟踪、均值回归、套利策略、多因子模型是最常见的几大量化策略类型。</p>
+      <h2>实盘注意事项</h2>
+      <p>回测不等于实盘，滑点、手续费、流动性都是需要考虑的因素。从小资金开始，逐步验证。</p>
+      <h2>风险提示</h2>
+      <p>投资有风险，入市需谨慎。量化只是工具，不能消除风险，只能更系统地管理风险。</p>
+    `
+  },
+  {
+    id: 3,
+    title: '海外营销：独立站流量获取实战',
+    excerpt: '做跨境电商或海外内容创业，流量是关键。分享 SEO、社交媒体、付费广告等多种获客渠道的实操经验。',
+    category: '海外营销',
+    date: '2026-07-08',
+    readTime: '18 分钟',
+    author: '作者',
+    content: `
+      <p>海外市场虽然竞争激烈，但也充满机会。掌握正确的流量获取方法，你的独立站就能脱颖而出。</p>
+      <h2>SEO 还是流量基石</h2>
+      <p>Google SEO 是最稳定的长期流量来源。关键词研究、内容创作、外链建设三大核心缺一不可。</p>
+      <h2>社交媒体引流</h2>
+      <p>Twitter/X、LinkedIn、Reddit、TikTok 各有特点，找到你的目标用户聚集的平台重点突破。</p>
+      <h2>付费广告入门</h2>
+      <p>Google Ads、Facebook Ads 是最主流的付费渠道。从小预算开始测试，找到盈利的广告素材和受众。</p>
+      <h2>邮件营销的价值</h2>
+      <p>不要忽视邮件列表的价值。它是你完全拥有的用户触达渠道，转化率往往高于其他渠道。</p>
+    `
+  },
+  {
+    id: 4,
+    title: '副业创业：从 0 到 1 的实用指南',
+    excerpt: '想开展副业但不知道从何入手？分享从 idea 验证到产品落地的完整路径，帮你少走弯路。',
+    category: '副业创业',
+    date: '2026-07-03',
+    readTime: '10 分钟',
+    author: '作者',
+    content: `
+      <p>副业不是不务正业，而是给自己多一个选择，多一份抗风险能力。</p>
+      <h2>找到你的方向</h2>
+      <p>从你的技能、兴趣、市场需求三个维度交叉，找到最适合你的副业方向。</p>
+      <h2>验证需求</h2>
+      <p>不要一上来就花几个月做产品。先用最小成本验证需求，比如做个落地页收集意向。</p>
+      <h2>快速交付</h2>
+      <p>MVP（最小可行产品）思维很重要。先交付一个能用的版本，再根据用户反馈迭代。</p>
+      <h2>时间管理</h2>
+      <p>副业最大的挑战是时间。固定时间块、利用碎片时间、提高效率都是必修课。</p>
+    `
+  },
+  {
+    id: 5,
     title: '探索现代 Web 开发的未来趋势',
     excerpt: '从 WebAssembly 到边缘计算，Web 开发正在经历前所未有的变革。本文将带你了解 2026 年最值得关注的技术趋势。',
     category: '技术趋势',
-    date: '2026-07-10',
+    date: '2026-06-28',
     readTime: '8 分钟',
     author: '作者',
     content: `
       <p>Web 开发领域正在以前所未有的速度演进。随着 WebAssembly 的成熟、边缘计算的普及以及 AI 辅助开发的兴起，我们正站在一个新时代的起点。</p>
       <h2>WebAssembly：超越浏览器的边界</h2>
-      <p>WebAssembly（Wasm）不再仅仅是浏览器中运行 C++ 代码的工具。如今，它已经成为云原生应用的重要组成部分，被用于 serverless 函数、插件系统等领域。</p>
+      <p>WebAssembly（Wasm）不再仅仅是浏览器中运行 C++ 代码的工具。如今，它已经成为云原生应用的重要组成部分。</p>
       <h2>边缘计算：更近用户，更快响应</h2>
       <p>边缘计算将计算能力带到离用户更近的地方，大幅降低了延迟。Cloudflare Workers、Vercel Edge Functions 等平台让开发者能够轻松部署边缘应用。</p>
       <h2>AI 辅助开发：人机协作的新范式</h2>
@@ -25,103 +170,23 @@ const defaultPosts = [
     `
   },
   {
-    id: 2,
-    title: 'CSS Grid 布局完全指南',
-    excerpt: 'CSS Grid 是现代 Web 布局的强大工具。本文从基础概念到高级技巧，全面解析如何用好 Grid 布局。',
-    category: '前端开发',
-    date: '2026-07-05',
-    readTime: '12 分钟',
-    author: '作者',
-    content: `
-      <p>CSS Grid 布局是 CSS 中第一个真正意义上的二维布局系统，它让我们能够同时控制行和列。</p>
-      <h2>什么是 CSS Grid？</h2>
-      <p>Grid 布局允许我们将一个容器划分为行和列，然后将子元素放置到这些网格单元中。与 Flexbox 不同，Grid 专门为二维布局设计。</p>
-      <h2>基础概念</h2>
-      <p>使用 <code>display: grid</code> 创建一个网格容器。通过 <code>grid-template-columns</code> 和 <code>grid-template-rows</code> 定义网格结构。</p>
-      <h2>实战技巧</h2>
-      <p>使用 <code>fr</code> 单位实现弹性布局，<code>minmax()</code> 函数控制尺寸范围，<code>auto-fit</code> 和 <code>auto-fill</code> 实现响应式网格。</p>
-      <h2>总结</h2>
-      <p>CSS Grid 是现代 Web 开发必备的技能。掌握它，你将能够更高效地构建复杂的响应式布局。</p>
-    `
-  },
-  {
-    id: 3,
-    title: 'JavaScript 异步编程深入理解',
-    excerpt: '从回调到 Promise，再到 async/await，JavaScript 的异步编程模式不断演进。本文带你深入理解每种模式。',
-    category: '前端开发',
-    date: '2026-06-28',
-    readTime: '15 分钟',
-    author: '作者',
-    content: `
-      <p>JavaScript 是单线程语言，异步编程是其核心特性之一。理解异步模式对每个前端开发者都至关重要。</p>
-      <h2>回调函数时代</h2>
-      <p>回调是最早的异步处理方式，但容易导致"回调地狱"，代码难以维护。</p>
-      <h2>Promise 的革命</h2>
-      <p>Promise 通过链式调用解决了回调地狱问题，提供了更清晰的异步流程控制。</p>
-      <h2>async/await 的优雅</h2>
-      <p>async/await 让异步代码看起来像同步代码，大大提升了可读性和可维护性。</p>
-      <h2>最佳实践</h2>
-      <p>合理使用 <code>Promise.all</code>、<code>Promise.race</code> 等方法处理并发场景，注意错误处理和资源释放。</p>
-    `
-  },
-  {
-    id: 4,
-    title: '设计简洁高效的用户界面',
-    excerpt: '好的 UI 设计不在于花哨的效果，而在于清晰的层次和流畅的交互。分享几个实用的设计原则。',
-    category: '设计思考',
-    date: '2026-06-20',
-    readTime: '6 分钟',
-    author: '作者',
-    content: `
-      <p>简洁不等于简单。真正的简洁设计需要深思熟虑，去除多余，保留本质。</p>
-      <h2>视觉层次</h2>
-      <p>通过大小、颜色、间距建立清晰的视觉层次，引导用户注意力。</p>
-      <h2>留白的力量</h2>
-      <p>留白不是浪费空间，而是让内容呼吸，提升可读性和专注度。</p>
-      <h2>一致性原则</h2>
-      <p>保持字体、颜色、间距、交互的一致性，降低用户认知成本。</p>
-      <h2>反馈即时性</h2>
-      <p>每个操作都应有即时反馈，让用户知道系统正在响应。</p>
-    `
-  },
-  {
-    id: 5,
-    title: 'Git 工作流最佳实践',
-    excerpt: '团队协作中，Git 工作流的选择至关重要。对比分析 Git Flow、GitHub Flow 等主流工作流。',
-    category: '工具使用',
-    date: '2026-06-15',
-    readTime: '10 分钟',
-    author: '作者',
-    content: `
-      <p>版本控制是团队协作的基础，选择合适的 Git 工作流能大幅提升开发效率。</p>
-      <h2>Git Flow</h2>
-      <p>经典的多分支模型，适合有明确发布周期的项目，但相对复杂。</p>
-      <h2>GitHub Flow</h2>
-      <p>轻量级工作流，只有 main 和 feature 分支，适合持续部署。</p>
-      <h2>提交规范</h2>
-      <p>使用 Conventional Commits 规范提交信息，便于生成 changelog 和自动化处理。</p>
-      <h2>团队约定</h2>
-      <p>无论选择哪种工作流，最重要的是团队达成一致并严格执行。</p>
-    `
-  },
-  {
     id: 6,
-    title: '性能优化：从首屏加载说起',
-    excerpt: '网站性能直接影响用户体验和转化率。本文分享几个关键的性能优化策略。',
-    category: '性能优化',
-    date: '2026-06-08',
-    readTime: '11 分钟',
+    title: 'Vercel 部署实战：从 GitHub 到上线',
+    excerpt: '详细讲解如何将你的项目通过 Vercel 部署上线，包括 CI/CD、自定义域名、环境变量等配置。',
+    category: '建站实战',
+    date: '2026-06-20',
+    readTime: '9 分钟',
     author: '作者',
     content: `
-      <p>性能优化是一个系统工程，涉及网络、渲染、资源加载等多个方面。</p>
-      <h2>关键指标</h2>
-      <p>关注 LCP、FID、CLS 等 Core Web Vitals 指标，它们直接影响搜索排名。</p>
-      <h2>资源优化</h2>
-      <p>压缩图片、延迟加载、代码分割、Tree Shaking 等技术能有效减少加载体积。</p>
-      <h2>渲染优化</h2>
-      <p>减少重排重绘，使用 CSS transforms 和 opacity 做动画，合理使用虚拟列表。</p>
-      <h2>缓存策略</h2>
-      <p>利用 HTTP 缓存、Service Worker、CDN 等多层缓存提升重复访问速度。</p>
+      <p>Vercel 是前端开发者部署项目的首选平台之一，体验丝滑，功能强大。</p>
+      <h2>为什么选择 Vercel？</h2>
+      <p>自动部署、全球 CDN、边缘函数、预览功能，Vercel 为前端项目提供了开箱即用的最佳实践。</p>
+      <h2>连接 GitHub 仓库</h2>
+      <p>只需几步授权，Vercel 就能自动识别你的项目类型并配置构建命令。</p>
+      <h2>自定义域名</h2>
+      <p>绑定你自己的域名，Vercel 会自动配置 HTTPS 证书，全程无痛。</p>
+      <h2>环境变量配置</h2>
+      <p>敏感信息不要写在代码里，使用环境变量来管理，安全又灵活。</p>
     `
   }
 ];
@@ -136,13 +201,6 @@ function getPosts() {
 }
 
 const posts = getPosts();
-
-// 获取所有分类
-function getCategories() {
-  const categories = new Set();
-  posts.forEach(post => categories.add(post.category));
-  return Array.from(categories);
-}
 
 // 根据 ID 获取文章
 function getPostById(id) {
