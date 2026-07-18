@@ -470,7 +470,16 @@ function initPostDetail() {
     return;
   }
 
-  document.title = `${post.title} - 个人博客`;
+  // 动态更新 SEO 标签
+  document.title = `${post.title} - 技术笔记`;
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.setAttribute('content', post.excerpt.replace(/<[^>]+>/g, '').substring(0, 160));
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle) ogTitle.setAttribute('content', post.title);
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if (ogDesc) ogDesc.setAttribute('content', post.excerpt.replace(/<[^>]+>/g, '').substring(0, 160));
+  const ogUrl = document.getElementById('og-url');
+  if (ogUrl) ogUrl.setAttribute('content', window.location.href);
 
   const postCats = getPostCategories(post);
   const catBadges = postCats.map(cat =>
@@ -497,8 +506,48 @@ function initPostDetail() {
     </article>
   `;
 
-  // 渲染完成后构建目录
+  // 渲染完成后构建目录和前后导航
   buildTOC();
+  buildPostNav();
+}
+
+// ====== 上一篇 / 下一篇导航 ======
+function buildPostNav() {
+  const article = document.querySelector('.post-content');
+  if (!article) return;
+
+  const allPosts = getAllPosts();
+  // 按日期降序排列（同首页顺序）
+  const sorted = allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const params = new URLSearchParams(window.location.search);
+  const currentId = parseInt(params.get('id'));
+  const currentIndex = sorted.findIndex(p => p.id === currentId);
+
+  if (currentIndex === -1) return;
+
+  const prev = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+  const next = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+
+  if (!prev && !next) return;
+
+  const nav = document.createElement('nav');
+  nav.className = 'post-nav';
+  nav.innerHTML = `
+    ${prev ? `
+      <a href="post.html?id=${prev.id}" class="post-nav__link post-nav__link--prev">
+        <span class="post-nav__label">← 上一篇</span>
+        <span class="post-nav__title">${prev.title}</span>
+      </a>
+    ` : '<span class="post-nav__link post-nav__link--prev post-nav__link--empty"></span>'}
+    ${next ? `
+      <a href="post.html?id=${next.id}" class="post-nav__link post-nav__link--next">
+        <span class="post-nav__label">下一篇 →</span>
+        <span class="post-nav__title">${next.title}</span>
+      </a>
+    ` : '<span class="post-nav__link post-nav__link--next post-nav__link--empty"></span>'}
+  `;
+  article.appendChild(nav);
 }
 
 // ====== 文章目录 (TOC) ======
@@ -595,9 +644,32 @@ function initMobileNav() {
 }
 
 // ============================================
+// 主题切换
+// ============================================
+function initTheme() {
+  const toggle = document.getElementById('theme-toggle');
+  if (!toggle) return;
+
+  // 读取保存的主题，或跟随系统
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+
+  document.documentElement.setAttribute('data-theme', theme);
+
+  toggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+}
+
+// ============================================
 // 页面初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', async () => {
+  initTheme();
   initMobileNav();
   // 先加载云端文章数据
   await loadCloudPosts();
