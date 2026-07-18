@@ -27,8 +27,40 @@
 
   <!-- 文章详情 -->
   <main class="post-page">
-    <div class="container">
-      <div id="post-detail"></div>
+    <div class="container post-layout">
+
+      <!-- 桌面端：侧边栏目录 -->
+      <aside class="toc-sidebar" id="toc-sidebar">
+        <div class="toc-sidebar__header">
+          <svg class="toc-sidebar__icon" width="15" height="13" viewBox="0 0 15 13" fill="none" aria-hidden="true">
+            <rect x="0" y="0" width="15" height="1.8" rx="0.9" fill="currentColor" opacity="0.9"/>
+            <rect x="0" y="5.6" width="10" height="1.8" rx="0.9" fill="currentColor" opacity="0.65"/>
+            <rect x="0" y="11.2" width="13" height="1.8" rx="0.9" fill="currentColor" opacity="0.4"/>
+          </svg>
+          <span>目录</span>
+        </div>
+        <nav class="toc-sidebar__nav" id="toc-nav-desktop"></nav>
+      </aside>
+
+      <!-- 文章正文区域 -->
+      <div class="post-layout__main">
+
+        <!-- 移动端：折叠式目录 -->
+        <details class="toc-mobile" id="toc-mobile">
+          <summary class="toc-mobile__toggle">
+            <svg width="15" height="13" viewBox="0 0 15 13" fill="none" aria-hidden="true">
+              <rect x="0" y="0" width="15" height="1.8" rx="0.9" fill="currentColor" opacity="0.9"/>
+              <rect x="0" y="5.6" width="10" height="1.8" rx="0.9" fill="currentColor" opacity="0.65"/>
+              <rect x="0" y="11.2" width="13" height="1.8" rx="0.9" fill="currentColor" opacity="0.4"/>
+            </svg>
+            <span>目录</span>
+          </summary>
+          <nav class="toc-mobile__nav" id="toc-nav-mobile"></nav>
+        </details>
+
+        <div id="post-detail"></div>
+      </div>
+
     </div>
   </main>
 

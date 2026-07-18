@@ -496,6 +496,88 @@ function initPostDetail() {
       </div>
     </article>
   `;
+
+  // 渲染完成后构建目录
+  buildTOC();
+}
+
+// ====== 文章目录 (TOC) ======
+function buildTOC() {
+  const article = document.querySelector('.post-content__body');
+  const desktopNav = document.getElementById('toc-nav-desktop');
+  const mobileNav = document.getElementById('toc-nav-mobile');
+  const sidebar = document.getElementById('toc-sidebar');
+
+  if (!article || !desktopNav || !mobileNav) return;
+
+  const headings = article.querySelectorAll('h2, h3');
+  if (headings.length === 0) {
+    if (sidebar) sidebar.classList.add('toc-sidebar--empty');
+    return;
+  }
+
+  // 给每个标题生成 id
+  const items = [];
+  headings.forEach((h, i) => {
+    if (!h.id) {
+      h.id = 'toc-' + i + '-' + encodeURIComponent(h.textContent.replace(/\s+/g, '-').replace(/[^\w一-鿿-]/g, '').substring(0, 40));
+    }
+    items.push({
+      id: h.id,
+      text: h.textContent,
+      level: h.tagName.toLowerCase()
+    });
+  });
+
+  const html = items.map(item => `
+    <li class="toc-sidebar__item ${item.level === 'h3' ? 'toc-sidebar__item--h3' : ''}">
+      <a href="#${item.id}" data-toc="${item.id}">${item.text}</a>
+    </li>
+  `).join('');
+
+  desktopNav.innerHTML = html;
+  mobileNav.innerHTML = html.replace(/toc-sidebar__/g, 'toc-mobile__');
+
+  // 点击目录项平滑滚动
+  document.querySelectorAll('[data-toc]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = link.getAttribute('data-toc');
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      // 移动端点完后关闭目录
+      const mobileDetails = document.getElementById('toc-mobile');
+      if (mobileDetails) mobileDetails.open = false;
+    });
+  });
+
+  // 启动滚动监听
+  initScrollSpy(items);
+}
+
+function initScrollSpy(items) {
+  const links = document.querySelectorAll('[data-toc]');
+  if (links.length === 0) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const link = document.querySelector(`[data-toc="${entry.target.id}"]`);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, {
+    rootMargin: '-100px 0px -75% 0px'
+  });
+
+  items.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (el) observer.observe(el);
+  });
 }
 
 // ============================================
