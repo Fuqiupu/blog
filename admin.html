@@ -8,838 +8,527 @@
   <style>
     :root {
       --color-primary: #2563eb;
-      --color-primary-dark: #1d4ed8;
-      --color-text: #1f2937;
-      --color-text-light: #6b7280;
-      --color-bg: #ffffff;
-      --color-bg-alt: #f9fafb;
-      --color-border: #e5e7eb;
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --radius: 12px;
-      --transition: all 0.3s ease;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: var(--font-sans);
-      color: var(--color-text);
-      background: var(--color-bg-alt);
+      font-family: var(--font);
+      color: #1a1a1a;
+      background: #fff;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-
-    /* 登录界面 */
+    /* ============================== */
+    /* LOGIN                          */
+    /* ============================== */
     .login-page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; background: #fafbfc;
     }
 
     .login-card {
-      background: var(--color-bg);
-      padding: 48px;
-      border-radius: var(--radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
+      background: #fff; padding: 52px 44px; border-radius: 16px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.06);
+      width: 100%; max-width: 380px; text-align: center;
     }
 
-    .login-card__logo {
-      font-size: 2rem;
-      margin-bottom: 16px;
-    }
+    .login-card__logo { margin-bottom: 20px; }
 
     .login-card__title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-size: 22px; font-weight: 700; margin-bottom: 6px;
+      letter-spacing: -0.02em;
     }
 
     .login-card__desc {
-      color: var(--color-text-light);
-      margin-bottom: 32px;
+      font-size: 14px; color: #999; margin-bottom: 32px;
     }
 
     .login-card__input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid var(--color-border);
-      border-radius: 8px;
-      font-size: 1rem;
-      outline: none;
-      transition: var(--transition);
-      margin-bottom: 16px;
+      width: 100%; padding: 12px 16px; border: 1px solid #e8e8e8;
+      border-radius: 10px; font-size: 15px; font-family: inherit;
+      outline: none; margin-bottom: 14px; transition: border-color 0.15s;
     }
-
-    .login-card__input:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-    }
+    .login-card__input:focus { border-color: var(--color-primary); }
 
     .login-card__btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--color-primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
+      width: 100%; padding: 12px; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 10px; font-size: 15px;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
     }
-
-    .login-card__btn:hover {
-      background: var(--color-primary-dark);
-    }
+    .login-card__btn:hover { background: #333; }
 
     .login-card__error {
-      color: #dc2626;
-      margin-bottom: 16px;
-      font-size: 0.9rem;
+      color: #dc2626; margin-bottom: 14px; font-size: 13px; min-height: 20px;
     }
 
-    /* 管理界面 */
-    .admin-page {
-      display: none;
-    }
+    /* ============================== */
+    /* ADMIN PAGE                     */
+    /* ============================== */
+    .admin-page { display: none; }
 
-    .header {
-      background: var(--color-bg);
-      padding: 16px 0;
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: 32px;
+    /* ---- Topbar ---- */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 28px; border-bottom: 1px solid #f2f2f2;
+      position: sticky; top: 0; background: #fff; z-index: 100;
     }
+    .topbar__left { display: flex; align-items: center; gap: 28px; }
+    .topbar__brand {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 14px; color: #1a1a1a;
+    }
+    .topbar__nav { display: flex; gap: 2px; }
+    .topbar__nav button {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 14px; border-radius: 7px; font-size: 13px;
+      font-weight: 500; color: #888; background: none; border: none;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .topbar__nav button:hover { color: #444; background: #f5f5f5; }
+    .topbar__nav button.active {
+      color: var(--color-primary); background: #f4f6fa;
+    }
+    .topbar__right { display: flex; align-items: center; gap: 12px; }
+    .topbar__status {
+      font-size: 12px; color: #999; max-width: 240px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .topbar__logout {
+      padding: 6px 14px; border-radius: 7px; font-size: 13px;
+      font-weight: 500; color: #888; background: none; border: 1px solid #e8e8e8;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center;
+      gap: 4px; transition: all 0.15s;
+    }
+    .topbar__logout:hover { color: #333; border-color: #ccc; }
 
-    .header__content {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    /* ---- Body ---- */
+    .body { max-width: 720px; margin: 0 auto; padding: 40px 24px 60px; }
 
-    .header__title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
+    .section { display: none; }
+    .section.active { display: block; }
 
-    .header__logout {
-      padding: 8px 16px;
-      background: var(--color-bg-alt);
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      color: var(--color-text-light);
-      transition: var(--transition);
+    /* ---- Editor ---- */
+    .editor-title {
+      width: 100%; border: none; outline: none;
+      font-size: 28px; font-weight: 700; font-family: inherit;
+      color: #1a1a1a; margin-bottom: 16px;
+      letter-spacing: -0.02em;
     }
+    .editor-title::placeholder { color: #d0d0d0; }
 
-    .header__logout:hover {
-      background: var(--color-border);
-      color: var(--color-text);
+    .editor-meta {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px; flex-wrap: wrap;
     }
+    .editor-meta__cats {
+      display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+    }
+    .editor-meta__cats label {
+      display: flex; align-items: center; gap: 4px;
+      padding: 5px 12px; border: 1px solid #e8e8e8; border-radius: 20px;
+      font-size: 12px; cursor: pointer; user-select: none;
+      color: #888; font-weight: 500; transition: all 0.15s;
+    }
+    .editor-meta__cats label:hover { border-color: #bbb; }
+    .editor-meta__cats input[type="checkbox"] { accent-color: var(--color-primary); }
+    .editor-meta__cats input[type="checkbox"]:checked + span { color: var(--color-primary); }
+    .editor-meta__item {
+      font-size: 13px; color: #999; padding: 0 4px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .editor-meta__item input {
+      border: 1px solid #e8e8e8; border-radius: 6px; padding: 5px 8px;
+      font-size: 12px; font-family: inherit; color: #666; outline: none;
+      width: 110px;
+    }
+    .editor-meta__item input:focus { border-color: var(--color-primary); }
 
-    /* 表单 */
-    .form-section {
-      background: var(--color-bg);
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    .editor-body {
+      width: 100%; border: none; outline: none; resize: vertical;
+      font-size: 16px; font-family: inherit; color: #333;
+      line-height: 1.8; min-height: 200px; margin-bottom: 24px;
     }
+    .editor-body::placeholder { color: #d0d0d0; }
 
-    .form-section__title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group__label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-    }
-
-    .form-group__input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--color-border);
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .form-group__input:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-    }
-
-    .form-group__select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--color-border);
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      outline: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .form-group__select:focus {
-      border-color: var(--color-primary);
-    }
-
-    .form-group__textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--color-border);
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      outline: none;
-      transition: var(--transition);
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .form-group__textarea:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-    }
-
-    .form-group__hint {
-      font-size: 0.85rem;
-      color: var(--color-text-light);
-      margin-top: 4px;
-    }
-
-    /* 按钮组 */
-    .btn-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 32px;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-primary {
-      background: var(--color-primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--color-primary-dark);
-    }
-
-    .btn-secondary {
-      background: var(--color-bg-alt);
-      color: var(--color-text);
-    }
-
-    .btn-secondary:hover {
-      background: var(--color-border);
-    }
-
-    /* 分类多选 */
-    .category-checkboxes label {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      border: 2px solid var(--color-border);
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: var(--transition);
-      user-select: none;
-    }
-    .category-checkboxes label:hover {
-      border-color: var(--color-primary);
-    }
-    .category-checkboxes input[type="checkbox"] {
-      accent-color: var(--color-primary);
-    }
-    .category-checkboxes input[type="checkbox"]:checked + span {
-      color: var(--color-primary);
-      font-weight: 600;
-    }
-
-    /* 预览区域 */
-    .preview-section {
-      background: var(--color-bg);
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      margin-top: 24px;
-    }
-
-    .preview-section__title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .preview-card {
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      padding: 24px;
-      background: var(--color-bg-alt);
-    }
-
-    .preview-card__title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .preview-card__meta {
-      font-size: 0.85rem;
-      color: var(--color-text-light);
-      margin-bottom: 12px;
-    }
-
-    .preview-card__excerpt {
-      font-size: 0.95rem;
-      color: var(--color-text);
-      line-height: 1.6;
-    }
-
-    .preview-card__content {
-      font-size: 0.95rem;
-      color: var(--color-text);
-      line-height: 1.8;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--color-border);
-    }
-
-    .preview-card__content h2 {
-      font-size: 1.1rem;
-      margin: 16px 0 8px;
-    }
-
-    .preview-card__content p {
-      margin-bottom: 12px;
-    }
-
-    .preview-card__content code {
-      background: rgba(37, 99, 235, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    /* 成功提示 */
-    .success-message {
-      background: #dcfce7;
-      color: #16a34a;
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      display: none;
-    }
-
-    .success-message.show {
-      display: block;
-    }
-
-    /* 文件上传 */
+    /* ---- Upload ---- */
     .upload-area {
-      border: 2px dashed var(--color-border);
-      border-radius: 8px;
-      padding: 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-bottom: 20px;
-      background: var(--color-bg-alt);
+      border: 1px dashed #ddd; border-radius: 10px;
+      padding: 22px; text-align: center; cursor: pointer;
+      margin-bottom: 20px; transition: all 0.15s;
     }
-
-    .upload-area:hover {
-      border-color: var(--color-primary);
-      background: rgba(37, 99, 235, 0.04);
-    }
-
-    .upload-area--dragover {
-      border-color: var(--color-primary);
-      background: rgba(37, 99, 235, 0.08);
-    }
-
-    .upload-area__icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-
-    .upload-area__text {
-      font-size: 0.95rem;
-      color: var(--color-text-light);
-    }
-
-    .upload-area__text strong {
-      color: var(--color-primary);
-    }
-
-    .upload-area__hint {
-      font-size: 0.85rem;
-      color: var(--color-text-light);
-      margin-top: 4px;
-    }
-
-    .upload-input {
-      display: none;
-    }
-
+    .upload-area:hover { border-color: var(--color-primary); background: #fafbff; }
+    .upload-area--dragover { border-color: var(--color-primary); background: #f5f7ff; }
+    .upload-area__icon { margin-bottom: 6px; }
+    .upload-area__text { font-size: 14px; color: #999; }
+    .upload-area__text strong { color: var(--color-primary); font-weight: 600; }
+    .upload-area__hint { font-size: 12px; color: #bbb; margin-top: 4px; }
+    .upload-input { display: none; }
     .upload-filename {
-      display: none;
-      padding: 8px 16px;
-      background: rgba(37, 99, 235, 0.08);
-      color: var(--color-primary);
-      border-radius: 6px;
-      font-size: 0.9rem;
+      display: none; padding: 8px 14px; background: #f4f6fa;
+      color: var(--color-primary); border-radius: 8px;
+      font-size: 13px; margin-bottom: 16px;
+    }
+    .upload-filename.show { display: flex; align-items: center; justify-content: space-between; }
+    .upload-filename__remove {
+      background: none; border: none; color: #999; cursor: pointer;
+      font-size: 16px; padding: 0 4px;
+    }
+    .upload-filename__remove:hover { color: #dc2626; }
+
+    /* ---- Mode toggle ---- */
+    .mode-toggle { display: flex; gap: 4px; margin-bottom: 12px; }
+    .mode-toggle__btn {
+      padding: 4px 12px; border-radius: 6px; font-size: 12px;
+      font-weight: 500; color: #999; background: none;
+      border: 1px solid #e8e8e8; cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .mode-toggle__btn.active {
+      color: var(--color-primary); border-color: var(--color-primary);
+      background: #f8faff;
+    }
+
+    /* ---- Actions ---- */
+    .editor-actions {
+      display: flex; justify-content: flex-end; gap: 8px;
+    }
+    .btn {
+      padding: 8px 20px; border-radius: 8px; font-size: 13px;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; gap: 4px;
+      transition: all 0.15s; border: none;
+    }
+    .btn--sec { background: #f5f5f5; color: #555; }
+    .btn--sec:hover { background: #eee; }
+    .btn--pri { background: #1a1a1a; color: #fff; }
+    .btn--pri:hover { background: #333; }
+
+    /* ---- Success ---- */
+    .success-message {
+      background: #f0fdf4; color: #16a34a; padding: 14px 18px;
+      border-radius: 10px; margin-bottom: 24px; display: none;
+      font-size: 14px;
+    }
+    .success-message.show { display: block; }
+
+    /* ---- Section titles ---- */
+    .section-title {
+      font-size: 22px; font-weight: 700; margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .section-subtitle {
+      font-size: 12px; font-weight: 600; color: #999;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    /* ---- Card ---- */
+    .card {
+      background: #fff; border-radius: 12px; padding: 24px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.03);
       margin-bottom: 20px;
     }
 
-    .upload-filename.show {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* ---- Form elements (shared) ---- */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: #666; margin-bottom: 6px;
     }
-
-    .upload-filename__remove {
-      background: none;
-      border: none;
-      color: var(--color-text-light);
-      cursor: pointer;
-      font-size: 1.2rem;
-      padding: 0 4px;
+    .field input, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid #eee;
+      border-radius: 8px; font-size: 14px; font-family: inherit;
+      color: #333; outline: none; transition: border-color 0.15s;
     }
+    .field input:focus, .field textarea:focus { border-color: var(--color-primary); }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .field-hint { font-size: 12px; color: #aaa; margin-top: 4px; }
 
-    .upload-filename__remove:hover {
-      color: #dc2626;
+    /* ---- Category checkbox display ---- */
+    .category-checkboxes {
+      display: flex; flex-wrap: wrap; gap: 6px;
     }
-
-    /* Markdown 切换 */
-    .mode-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+    .category-checkboxes label {
+      display: flex; align-items: center; gap: 4px;
+      padding: 5px 12px; border: 1px solid #e8e8e8; border-radius: 20px;
+      font-size: 12px; cursor: pointer; user-select: none;
+      color: #888; font-weight: 500; transition: all 0.15s;
     }
+    .category-checkboxes label:hover { border-color: #bbb; }
+    .category-checkboxes input[type="checkbox"]:checked + span { color: var(--color-primary); }
 
-    .mode-toggle__btn {
-      padding: 6px 16px;
-      border: 2px solid var(--color-border);
-      border-radius: 999px;
-      background: var(--color-bg);
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-      color: var(--color-text-light);
-    }
-
-    .mode-toggle__btn.active {
-      border-color: var(--color-primary);
-      color: var(--color-primary);
-      background: rgba(37, 99, 235, 0.06);
-    }
-
-    /* 文章管理列表 */
-    .manage-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    /* ---- Manage list ---- */
+    .manage-list { display: flex; flex-direction: column; gap: 8px; }
     .manage-empty {
-      text-align: center;
-      color: var(--color-text-light);
-      padding: 32px;
-      font-size: 0.95rem;
+      text-align: center; color: #aaa; padding: 40px 20px;
+      font-size: 14px;
     }
-
     .manage-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: var(--color-bg-alt);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      transition: var(--transition);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 18px; background: #fff; border-radius: 10px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.03);
+      transition: box-shadow 0.15s;
     }
-
     .manage-item:hover {
-      border-color: var(--color-primary);
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.15), 0 2px 8px rgba(37,99,235,0.06);
     }
-
-    .manage-item__info {
-      flex: 1;
-      min-width: 0;
-    }
-
+    .manage-item__info { flex: 1; min-width: 0; }
     .manage-item__title {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-weight: 600; font-size: 14px; margin-bottom: 4px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-
-    .manage-item__meta {
-      font-size: 0.8rem;
-      color: var(--color-text-light);
-    }
-
+    .manage-item__meta { font-size: 12px; color: #999; }
     .manage-item__tag {
-      display: inline-block;
-      padding: 2px 8px;
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--color-primary);
-      border-radius: 4px;
-      font-size: 0.75rem;
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; margin-right: 6px;
+      background: #f4f6fa; color: var(--color-primary);
+    }
+    .manage-item__actions { display: flex; gap: 6px; margin-left: 16px; }
+    .manage-item__btn {
+      padding: 5px 10px; border-radius: 6px; font-size: 12px;
+      border: none; cursor: pointer; font-family: inherit;
+      transition: all 0.15s; font-weight: 500;
+    }
+    .manage-item__btn--edit { background: #f4f6fa; color: var(--color-primary); }
+    .manage-item__btn--edit:hover { background: var(--color-primary); color: #fff; }
+    .manage-item__btn--view { background: #f4f6fa; color: #666; }
+    .manage-item__btn--view:hover { background: #e0e0e0; }
+    .manage-item__btn--delete { background: #fef2f2; color: #dc2626; }
+    .manage-item__btn--delete:hover { background: #dc2626; color: #fff; }
+
+    /* ---- Category manage ---- */
+    .category-add {
+      display: flex; gap: 8px; margin-bottom: 16px;
+    }
+    .category-add__input {
+      flex: 1; padding: 9px 12px; border: 1px solid #eee;
+      border-radius: 8px; font-size: 14px; font-family: inherit;
+      outline: none;
+    }
+    .category-add__input:focus { border-color: var(--color-primary); }
+    .category-add__btn {
+      padding: 9px 18px; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 8px; font-size: 13px;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    .category-add__btn:hover { background: #333; }
+    .category-manage-list { display: flex; flex-direction: column; gap: 6px; }
+    .category-manage-empty {
+      text-align: center; color: #aaa; padding: 24px; font-size: 14px;
+    }
+    .category-manage-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: #fafbfc; border-radius: 8px;
+    }
+    .category-manage-item__name { font-weight: 500; font-size: 14px; }
+    .category-manage-item__actions { display: flex; gap: 6px; }
+    .category-manage-item__btn {
+      padding: 4px 10px; border-radius: 6px; font-size: 12px;
+      border: none; cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .category-manage-item__btn--edit { background: #f4f6fa; color: var(--color-primary); }
+    .category-manage-item__btn--edit:hover { background: var(--color-primary); color: #fff; }
+    .category-manage-item__btn--delete { background: #fef2f2; color: #dc2626; }
+    .category-manage-item__btn--delete:hover { background: #dc2626; color: #fff; }
+    .category-edit-input {
+      flex: 1; padding: 5px 8px; border: 1px solid var(--color-primary);
+      border-radius: 6px; font-size: 13px; font-family: inherit; outline: none;
       margin-right: 8px;
     }
 
-    .manage-item__tag--default {
-      background: rgba(107, 114, 128, 0.1);
-      color: var(--color-text-light);
+    /* ---- Preview ---- */
+    .preview-section { margin-top: 48px; }
+    .preview-section__title {
+      font-size: 12px; font-weight: 600; color: #aaa;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;
+    }
+    .preview-card {
+      padding: 24px; background: #fafbfc; border-radius: 10px;
+    }
+    .preview-card__title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .preview-card__meta { font-size: 13px; color: #999; margin-bottom: 12px; }
+    .preview-card__excerpt { font-size: 14px; color: #555; line-height: 1.6; }
+    .preview-card__content {
+      font-size: 14px; color: #333; line-height: 1.8;
+      margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee;
+    }
+    .preview-card__content h2 { font-size: 16px; margin: 16px 0 8px; }
+    .preview-card__content p { margin-bottom: 10px; }
+    .preview-card__content code {
+      background: rgba(37,99,235,0.08); padding: 2px 6px;
+      border-radius: 4px; font-size: 13px;
     }
 
-    .manage-item__actions {
-      display: flex;
-      gap: 8px;
-      margin-left: 16px;
-    }
-
-    .manage-item__btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .manage-item__btn--delete {
-      background: rgba(220, 38, 38, 0.08);
-      color: #dc2626;
-    }
-
-    .manage-item__btn--delete:hover {
-      background: #dc2626;
-      color: white;
-    }
-
-    .manage-item__btn--view {
-      background: rgba(37, 99, 235, 0.08);
-      color: var(--color-primary);
-    }
-
-    .manage-item__btn--view:hover {
-      background: var(--color-primary);
-      color: white;
-    }
-
-    .manage-item__btn--edit {
-      background: rgba(245, 158, 11, 0.08);
-      color: #f59e0b;
-    }
-
-    .manage-item__btn--edit:hover {
-      background: #f59e0b;
-      color: white;
-    }
-
-    /* 分类管理 */
-    .category-manage-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .category-manage-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      background: var(--color-bg-alt);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      transition: var(--transition);
-    }
-
-    .category-manage-item:hover {
-      border-color: var(--color-primary);
-    }
-
-    .category-manage-item__name {
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .category-manage-item__actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .category-manage-item__btn {
-      padding: 4px 10px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .category-manage-item__btn--edit {
-      background: rgba(37, 99, 235, 0.08);
-      color: var(--color-primary);
-    }
-
-    .category-manage-item__btn--edit:hover {
-      background: var(--color-primary);
-      color: white;
-    }
-
-    .category-manage-item__btn--delete {
-      background: rgba(220, 38, 38, 0.08);
-      color: #dc2626;
-    }
-
-    .category-manage-item__btn--delete:hover {
-      background: #dc2626;
-      color: white;
-    }
-
-    .category-add {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .category-add__input {
-      flex: 1;
-      padding: 10px 14px;
-      border: 2px solid var(--color-border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .category-add__input:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-    }
-
-    .category-add__btn {
-      padding: 10px 20px;
-      background: var(--color-primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-
-    .category-add__btn:hover {
-      background: var(--color-primary-dark);
-    }
-
-    .category-manage-empty {
-      text-align: center;
-      color: var(--color-text-light);
-      padding: 24px;
-      font-size: 0.95rem;
-    }
-
-    .category-edit-input {
-      flex: 1;
-      padding: 6px 10px;
-      border: 2px solid var(--color-primary);
-      border-radius: 6px;
-      font-size: 0.9rem;
-      outline: none;
-      margin-right: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .btn-group {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .login-card {
-        padding: 32px 24px;
-      }
-
-      .form-section, .preview-section {
-        padding: 20px;
-      }
-
-      .category-add {
-        flex-direction: column;
-      }
-
-      .category-add__btn {
-        width: 100%;
-      }
+    @media (max-width: 640px) {
+      .topbar { padding: 10px 16px; }
+      .topbar__left { gap: 12px; }
+      .topbar__nav button { padding: 5px 10px; font-size: 12px; }
+      .topbar__status { display: none; }
+      .body { padding: 24px 16px 48px; }
+      .editor-title { font-size: 22px; }
+      .editor-actions { flex-wrap: wrap; }
+      .btn { flex: 1; justify-content: center; }
+      .manage-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .manage-item__actions { margin-left: 0; }
+      .login-card { padding: 32px 24px; }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <!-- 登录界面 -->
-  <div class="login-page" id="login-page">
-    <div class="login-card">
-      <div class="login-card__logo">
-        <svg viewBox="0 0 32 32" width="48" height="48" fill="none" aria-hidden="true">
-          <circle cx="16" cy="16" r="14" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.3"/>
-          <circle cx="16" cy="16" r="10" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.22"/>
-          <path d="M9 27l3-3 8-8 4 4-8 8-3 1-1-2z" fill="#2563eb" opacity="0.15" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/>
-          <path d="M19 12l1-5 5 5-5 1z" fill="#2563eb"/>
-        </svg>
-      </div>
-      <h1 class="login-card__title">博客管理后台</h1>
-      <p class="login-card__desc">输入密码登录管理您的博客</p>
-      <div class="login-card__error" id="login-error"></div>
-      <input type="password" class="login-card__input" id="password-input" placeholder="请输入密码" />
-      <button class="login-card__btn" id="login-btn">登录</button>
+
+<!-- ==================== LOGIN ==================== -->
+<div class="login-page" id="login-page">
+  <div class="login-card">
+    <div class="login-card__logo">
+      <svg viewBox="0 0 32 32" width="48" height="48" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="13.5" fill="none" stroke="#2563eb" stroke-width="2" opacity="0.25"/>
+        <circle cx="16" cy="16" r="9.5" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.18"/>
+        <path d="M9 27l3-3 8-8 4 4-8 8-3 1-1-2z" fill="#2563eb" opacity="0.12" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M19 12l1-5 5 5-5 1z" fill="#2563eb"/>
+      </svg>
     </div>
+    <h1 class="login-card__title">博客管理后台</h1>
+    <p class="login-card__desc">输入密码登录管理您的博客</p>
+    <div class="login-card__error" id="login-error"></div>
+    <input type="password" class="login-card__input" id="password-input" placeholder="请输入密码" />
+    <button class="login-card__btn" id="login-btn">登录</button>
   </div>
+</div>
 
-  <!-- 管理界面 -->
-  <div class="admin-page" id="admin-page">
-    <header class="header">
-      <div class="header__content">
-        <div>
-          <div class="header__title">
-            <svg viewBox="0 0 32 32" width="22" height="22" fill="none" aria-hidden="true" style="vertical-align:middle;margin-right:4px;">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="#2563eb" stroke-width="1.5" opacity="0.3"/>
-              <circle cx="16" cy="16" r="10" fill="none" stroke="#2563eb" stroke-width="1" opacity="0.22"/>
-              <path d="M9 27l3-3 8-8 4 4-8 8-3 1-1-2z" fill="#2563eb" opacity="0.15" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/>
-              <path d="M19 12l1-5 5 5-5 1z" fill="#2563eb"/>
-            </svg>
-            博客管理后台
-          </div>
-          <div id="sync-status-bar" style="font-size:0.78rem;color:#6b7280;margin-top:2px;">加载中...</div>
-        </div>
-        <button class="header__logout" id="logout-btn">退出登录</button>
+<!-- ==================== ADMIN ==================== -->
+<div class="admin-page" id="admin-page">
+  <!-- Topbar -->
+  <nav class="topbar">
+    <div class="topbar__left">
+      <div class="topbar__brand">
+        <svg viewBox="0 0 32 32" width="22" height="22" fill="none" style="color:#2563eb">
+          <circle cx="16" cy="16" r="13.5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+          <circle cx="16" cy="16" r="9.5" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.18"/>
+          <path d="M9 27l3-3 8-8 4 4-8 8-3 1-1-2z" fill="currentColor" opacity="0.12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M19 12l1-5 5 5-5 1z" fill="currentColor"/>
+        </svg>
+        实践录
       </div>
-    </header>
+      <div class="topbar__nav">
+        <button class="active" data-section="editor">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+            <path d="M5 16.5l1.5-1.5 5.5-5.5 3 3-5.5 5.5L8 18.5 5 16.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M13 7l.8-3.5 3.2 3.2-3.5.8z" fill="currentColor"/>
+          </svg>
+          写文章
+        </button>
+        <button data-section="manage">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+            <path d="M5.5 2.5h8l4 4v10a1.5 1.5 0 0 1-1.5 1.5H5.5a1.5 1.5 0 0 1-1.5-1.5V4a1.5 1.5 0 0 1 1.5-1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M13.5 2.5v3.5h3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="7" y1="12.5" x2="11" y2="12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          文章
+        </button>
+        <button data-section="category">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+            <path d="M3.5 11V5a1.5 1.5 0 0 1 1.5-1.5h5.5l6.5 6.5-5 5-6.5-6.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/>
+          </svg>
+          分类
+        </button>
+        <button data-section="sync">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+            <path d="M5.5 14a3.2 3.2 0 0 1-.5-6.3 4.3 4.3 0 0 1 8-1.3 3 3 0 0 1-.5 5.6H5.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 10l1-1.5 1 1.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="10" y1="8.5" x2="10" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M14 11l1 1.5 1-1.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="15" y1="12.5" x2="15" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          同步
+        </button>
+      </div>
+    </div>
+    <div class="topbar__right">
+      <span class="topbar__status" id="sync-status-bar">加载中...</span>
+      <button class="topbar__logout" id="logout-btn">
+        <svg viewBox="0 0 18 18" width="14" height="14" fill="none">
+          <path d="M6 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <polyline points="10,12 14,9 10,6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="14" y1="9" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        退出
+      </button>
+    </div>
+  </nav>
 
-    <div class="container">
+  <!-- Body -->
+  <div class="body">
+
+    <!-- ====== 写文章 ====== -->
+    <section class="section active" id="section-editor">
       <div class="success-message" id="success-message">
         ✅ 文章发布成功！刷新博客首页即可看到。
       </div>
 
-      <div class="form-section">
-        <h2 class="form-section__title">发布新文章</h2>
-
-        <!-- 文件上传区域 -->
-        <div class="upload-area" id="upload-area">
-          <div class="upload-area__icon">
-            <svg viewBox="0 0 32 32" width="40" height="40" fill="none" aria-hidden="true">
-              <!-- document body -->
-              <path d="M8 4h10l8 8v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#2563eb" opacity="0.1" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/>
-              <!-- fold corner -->
-              <path d="M18 4v8h8" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/>
-              <!-- upload arrow -->
-              <path d="M16 14v8" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 18l4-4 4 4" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="upload-area__text"><strong>点击上传</strong> 或拖拽 Markdown 文件到此处</div>
-          <div class="upload-area__hint">支持 .md 文件，自动解析标题、正文等内容</div>
+      <!-- Upload -->
+      <div class="upload-area" id="upload-area">
+        <div class="upload-area__icon">
+          <svg viewBox="0 0 28 28" width="32" height="32" fill="none" style="color:#2563eb">
+            <path d="M7 4h8.5l6.5 6.5V22a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M15.5 4v6.5h6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <polyline points="10,15 14,10 18,15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="14" y1="10" x2="14" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
         </div>
-        <input type="file" class="upload-input" id="upload-input" accept=".md,.markdown,.txt" />
-        <div class="upload-filename" id="upload-filename">
-          <span id="upload-filename-text"></span>
-          <button class="upload-filename__remove" id="upload-remove">&times;</button>
-        </div>
+        <div class="upload-area__text"><strong>点击上传</strong> 或拖拽 Markdown 文件到此处</div>
+        <div class="upload-area__hint">支持 .md 文件，自动解析标题、正文等内容</div>
+      </div>
+      <input type="file" class="upload-input" id="upload-input" accept=".md,.markdown,.txt" />
+      <div class="upload-filename" id="upload-filename">
+        <span id="upload-filename-text"></span>
+        <button class="upload-filename__remove" id="upload-remove">&times;</button>
+      </div>
 
-        <div class="form-group">
-          <label class="form-group__label">标题</label>
-          <input type="text" class="form-group__input" id="post-title" placeholder="输入文章标题" />
-        </div>
+      <!-- Title -->
+      <input type="text" class="editor-title" id="post-title" placeholder="文章标题" />
 
-        <div class="form-group">
-          <label class="form-group__label">分类（可多选）</label>
-          <div class="category-checkboxes" id="post-categories" style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0;">
-          </div>
+      <!-- Meta -->
+      <div class="editor-meta">
+        <div class="category-checkboxes" id="post-categories"></div>
+        <div class="editor-meta__item">
+          <input type="date" id="post-date" />
         </div>
-
-        <div class="form-group">
-          <label class="form-group__label">日期</label>
-          <input type="date" class="form-group__input" id="post-date" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-group__label">阅读时间</label>
-          <input type="text" class="form-group__input" id="post-readtime" placeholder="如：5 分钟" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-group__label">摘要</label>
-          <textarea class="form-group__textarea" id="post-excerpt" placeholder="简短描述文章内容（1-2句话）"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-group__label">正文内容</label>
-          <div class="mode-toggle">
-            <button class="mode-toggle__btn active" id="mode-md">Markdown 模式</button>
-            <button class="mode-toggle__btn" id="mode-html">HTML 模式</button>
-          </div>
-          <textarea class="form-group__textarea" id="post-content" placeholder="支持 Markdown 语法：## 二级标题、**粗体**、`代码` 等" style="min-height: 200px;"></textarea>
-          <div class="form-group__hint" id="content-hint">Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)</div>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" id="publish-btn">发布文章</button>
-          <button class="btn btn-secondary" id="preview-btn">预览文章</button>
-          <button class="btn btn-secondary" id="clear-btn">清空表单</button>
+        <div class="editor-meta__item">
+          <input type="text" id="post-readtime" placeholder="阅读时间" />
         </div>
       </div>
 
+      <!-- Excerpt -->
+      <textarea class="editor-body" id="post-excerpt" placeholder="摘要（1-2句话简短描述）" style="min-height:48px;"></textarea>
+
+      <!-- Content -->
+      <div class="mode-toggle">
+        <button class="mode-toggle__btn active" id="mode-md">Markdown</button>
+        <button class="mode-toggle__btn" id="mode-html">HTML</button>
+      </div>
+      <div class="field-hint" id="content-hint" style="margin-bottom:8px;">Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)</div>
+      <textarea class="editor-body" id="post-content" placeholder="正文内容...支持 Markdown 语法" style="min-height:240px;"></textarea>
+
+      <!-- Actions -->
+      <div class="editor-actions">
+        <button class="btn btn--sec" id="clear-btn">清空</button>
+        <button class="btn btn--sec" id="preview-btn">预览</button>
+        <button class="btn btn--pri" id="publish-btn">发布文章</button>
+      </div>
+
+      <!-- Preview -->
       <div class="preview-section">
-        <h2 class="preview-section__title">文章预览</h2>
+        <div class="preview-section__title">文章预览</div>
         <div class="preview-card" id="preview-card">
           <div class="preview-card__title">预览将显示在这里...</div>
           <div class="preview-card__meta">分类 · 日期 · 阅读时间</div>
@@ -847,827 +536,651 @@
           <div class="preview-card__content"></div>
         </div>
       </div>
+    </section>
 
-      <!-- 云端同步设置 -->
-      <div class="preview-section" id="sync-settings-section">
-        <h2 class="preview-section__title">云端同步设置</h2>
-        <div class="form-group">
-          <label class="form-group__label">GitHub Token</label>
-          <input type="password" class="form-group__input" id="github-token-input" placeholder="输入 GitHub Personal Access Token" />
-          <p class="form-group__hint">
+    <!-- ====== 文章管理 ====== -->
+    <section class="section" id="section-manage">
+      <div class="section-title">文章管理</div>
+      <div style="margin-bottom:20px;">
+        <button class="btn btn--pri" id="sync-cloud-btn" style="width:100%;justify-content:center;">同步本地文章到云端</button>
+        <p style="font-size:12px;color:#aaa;margin-top:8px;text-align:center;">
+          同步后所有设备都能看到最新文章
+        </p>
+      </div>
+      <div class="manage-list" id="manage-list">
+        <div class="manage-empty">暂无文章</div>
+      </div>
+    </section>
+
+    <!-- ====== 分类管理 ====== -->
+    <section class="section" id="section-category">
+      <div class="section-title">分类管理</div>
+      <div class="category-add">
+        <input type="text" class="category-add__input" id="new-category-input" placeholder="输入新分类名称" />
+        <button class="category-add__btn" id="add-category-btn">添加分类</button>
+      </div>
+      <div class="category-manage-list" id="category-manage-list">
+        <div class="category-manage-empty">暂无分类</div>
+      </div>
+    </section>
+
+    <!-- ====== 云端同步 ====== -->
+    <section class="section" id="section-sync">
+      <div class="section-title">云端同步设置</div>
+      <div class="card">
+        <div class="section-subtitle">GitHub Token</div>
+        <div class="field">
+          <input type="password" id="github-token-input" placeholder="输入 GitHub Personal Access Token" />
+          <div class="field-hint">
             Token 用于将文章同步到 GitHub 仓库，实现多设备数据共享。<br>
-            获取方式：GitHub → Settings → Developer settings → Personal access tokens → 生成新 token（需勾选 repo 权限）
-          </p>
-        </div>
-        <button class="btn btn-primary" id="save-token-btn" onclick="saveToken()">保存 Token</button>
-        <p id="token-status" style="margin-top: 12px; font-size: 0.9rem;"></p>
-      </div>
-
-      <!-- 分类管理区域 -->
-      <div class="preview-section" id="category-section">
-        <h2 class="preview-section__title">分类管理</h2>
-        <div class="category-add">
-          <input type="text" class="category-add__input" id="new-category-input" placeholder="输入新分类名称" />
-          <button class="category-add__btn" id="add-category-btn">添加分类</button>
-        </div>
-        <div class="category-manage-list" id="category-manage-list">
-          <div class="category-manage-empty">暂无分类</div>
-        </div>
-      </div>
-
-      <!-- 文章管理区域 -->
-      <div class="preview-section" id="manage-section">
-        <h2 class="preview-section__title">文章管理</h2>
-        <div style="margin-bottom: 16px;">
-          <button class="btn btn-primary" id="sync-cloud-btn" onclick="syncAllToCloud()" style="width: 100%;">同步本地文章到云端</button>
-          <p style="font-size: 0.85rem; color: #6b7280; margin-top: 8px; text-align: center;">
-            点击此按钮将本地文章上传到云端，同步后所有设备都能看到
-          </p>
-        </div>
-        <div class="manage-list" id="manage-list">
-          <div class="manage-empty">暂无文章</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // 默认密码：admin123（可在代码中修改）
-    const ADMIN_PASSWORD = 'admin123';
-
-    // GitHub 配置（用于云端同步文章）
-    // Token 从 localStorage 读取，首次使用需在后台设置中输入
-    const GITHUB_CONFIG = {
-      owner: 'Fuqiupu',
-      repo: 'blog',
-      branch: 'main',
-      path: 'posts.json'
-    };
-
-    function getGithubToken() {
-      return localStorage.getItem('githubToken') || '';
-    }
-
-    function setGithubToken(token) {
-      localStorage.setItem('githubToken', token);
-    }
-
-    // 保存 GitHub Token
-    function saveToken() {
-      const tokenInput = document.getElementById('github-token-input');
-      const tokenStatus = document.getElementById('token-status');
-      const token = tokenInput.value.trim();
-      if (!token) {
-        tokenStatus.textContent = '请输入 Token';
-        tokenStatus.style.color = '#dc2626';
-        return;
-      }
-      setGithubToken(token);
-      tokenInput.value = '';
-      tokenStatus.textContent = '✅ Token 已保存，云端同步功能已启用';
-      tokenStatus.style.color = '#16a34a';
-    }
-
-    // 检查 Token 状态
-    function checkTokenStatus() {
-      const tokenStatus = document.getElementById('token-status');
-      const token = getGithubToken();
-      if (token) {
-        tokenStatus.textContent = '✅ 已配置 GitHub Token，云端同步功能已启用';
-        tokenStatus.style.color = '#16a34a';
-      } else {
-        tokenStatus.textContent = '⚠️ 未配置 Token，文章仅保存在本地，其他设备无法看到。请输入 Token 以启用云端同步。';
-        tokenStatus.style.color = '#f59e0b';
-      }
-      updateSyncStatusBar();
-    }
-
-    // 更新顶部同步状态栏
-    function updateSyncStatusBar() {
-      const bar = document.getElementById('sync-status-bar');
-      if (!bar) return;
-      const token = getGithubToken();
-      const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      if (!token) {
-        bar.innerHTML = '⚠️ 未配置云端同步 — 文章仅本设备可见，<b>移动端看不到</b>';
-        bar.style.color = '#dc2626';
-      } else {
-        bar.innerHTML = `✅ 云端同步已启用 | 本地文章: ${localPosts.length} 篇`;
-        bar.style.color = '#16a34a';
-      }
-    }
-
-    // 内容模式：md 或 html
-    let contentMode = 'md';
-
-    // DOM 元素
-    const loginPage = document.getElementById('login-page');
-    const adminPage = document.getElementById('admin-page');
-    const passwordInput = document.getElementById('password-input');
-    const loginBtn = document.getElementById('login-btn');
-    const loginError = document.getElementById('login-error');
-    const logoutBtn = document.getElementById('logout-btn');
-    const successMessage = document.getElementById('success-message');
-
-    const postTitle = document.getElementById('post-title');
-    const postDate = document.getElementById('post-date');
-    const postReadtime = document.getElementById('post-readtime');
-    const postExcerpt = document.getElementById('post-excerpt');
-    const postContent = document.getElementById('post-content');
-
-    const publishBtn = document.getElementById('publish-btn');
-    const previewBtn = document.getElementById('preview-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const previewCard = document.getElementById('preview-card');
-
-    // 文件上传元素
-    const uploadArea = document.getElementById('upload-area');
-    const uploadInput = document.getElementById('upload-input');
-    const uploadFilename = document.getElementById('upload-filename');
-    const uploadFilenameText = document.getElementById('upload-filename-text');
-    const uploadRemove = document.getElementById('upload-remove');
-
-    // 模式切换元素
-    const modeMd = document.getElementById('mode-md');
-    const modeHtml = document.getElementById('mode-html');
-    const contentHint = document.getElementById('content-hint');
-
-    // 分类管理元素
-    const newCategoryInput = document.getElementById('new-category-input');
-    const addCategoryBtn = document.getElementById('add-category-btn');
-    const categoryManageList = document.getElementById('category-manage-list');
-
-    // 默认分类列表
-    const defaultCategories = [
-      '建站实战',
-      '量化投资',
-      '海外营销',
-      '副业创业',
-      '技术趋势'
-    ];
-
-    // 获取分类列表
-    function getCategories() {
-      const saved = localStorage.getItem('blogCategories');
-      if (saved) {
-        return JSON.parse(saved);
-      }
-      return [...defaultCategories];
-    }
-
-    // 保存分类列表
-    function saveCategories(categories) {
-      localStorage.setItem('blogCategories', JSON.stringify(categories));
-    }
-
-    // 渲染分类下拉选项
-    function renderCategorySelect() {
-      const categories = getCategories();
-      const container = document.getElementById('post-categories');
-      if (!container) return;
-      container.innerHTML = categories.map(cat =>
-        `<label><input type="checkbox" value="${escapeHtml(cat)}"><span>${escapeHtml(cat)}</span></label>`
-      ).join('');
-    }
-
-    // 获取选中的分类数组
-    function getSelectedCategories() {
-      const container = document.getElementById('post-categories');
-      if (!container) return [];
-      const checked = container.querySelectorAll('input[type="checkbox"]:checked');
-      const cats = [];
-      checked.forEach(cb => cats.push(cb.value));
-      return cats;
-    }
-
-    // 设置选中的分类（用于编辑文章时回填）
-    function setSelectedCategories(cats) {
-      const container = document.getElementById('post-categories');
-      if (!container) return;
-      container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        cb.checked = cats.includes(cb.value);
-      });
-    }
-
-    // 渲染分类管理列表
-    function renderCategoryManageList() {
-      const categories = getCategories();
-      if (categories.length === 0) {
-        categoryManageList.innerHTML = '<div class="category-manage-empty">暂无分类，请添加新分类</div>';
-        return;
-      }
-      categoryManageList.innerHTML = categories.map(cat => `
-        <div class="category-manage-item" data-category="${cat}">
-          <span class="category-manage-item__name">${escapeHtml(cat)}</span>
-          <div class="category-manage-item__actions">
-            <button class="category-manage-item__btn category-manage-item__btn--edit" onclick="editCategory('${escapeHtml(cat)}')">编辑</button>
-            <button class="category-manage-item__btn category-manage-item__btn--delete" onclick="deleteCategory('${escapeHtml(cat)}')">删除</button>
+            获取方式：GitHub → Settings → Developer settings → Personal access tokens → 生成新 token（勾选 repo 权限）
           </div>
         </div>
-      `).join('');
-    }
+        <button class="btn btn--pri" id="save-token-btn">保存 Token</button>
+        <p id="token-status" style="margin-top:12px;font-size:13px;"></p>
+      </div>
+    </section>
 
-    // 添加分类
-    function addCategory() {
-      const name = newCategoryInput.value.trim();
-      if (!name) {
-        alert('请输入分类名称');
-        return;
-      }
-      const categories = getCategories();
-      if (categories.includes(name)) {
-        alert('该分类已存在');
-        return;
-      }
-      categories.push(name);
+  </div>
+</div>
+
+<script>
+  // ===== NAVIGATION =====
+  (function() {
+    const navButtons = document.querySelectorAll('.topbar__nav button');
+    const sections = document.querySelectorAll('.section');
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.section;
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        sections.forEach(s => s.classList.remove('active'));
+        const targetSection = document.getElementById('section-' + target);
+        if (targetSection) targetSection.classList.add('active');
+        // Refresh manage list when switching to that section
+        if (target === 'manage' && typeof renderManageList === 'function') renderManageList();
+      });
+    });
+
+    // Expose: switch to editor section
+    window.switchToEditor = function() {
+      navButtons.forEach(b => b.classList.remove('active'));
+      const editorBtn = document.querySelector('.topbar__nav button[data-section="editor"]');
+      if (editorBtn) editorBtn.classList.add('active');
+      sections.forEach(s => s.classList.remove('active'));
+      const editorSection = document.getElementById('section-editor');
+      if (editorSection) editorSection.classList.add('active');
+    };
+  })();
+
+  // ===== ORIGINAL JS (all DOM references preserved) =====
+  const ADMIN_PASSWORD = 'admin123';
+
+  const GITHUB_CONFIG = {
+    owner: 'Fuqiupu', repo: 'blog', branch: 'main', path: 'posts.json'
+  };
+
+  function getGithubToken() {
+    return localStorage.getItem('githubToken') || '';
+  }
+
+  function setGithubToken(token) {
+    localStorage.setItem('githubToken', token);
+  }
+
+  function saveToken() {
+    const tokenInput = document.getElementById('github-token-input');
+    const tokenStatus = document.getElementById('token-status');
+    const token = tokenInput.value.trim();
+    if (!token) {
+      tokenStatus.textContent = '请输入 Token';
+      tokenStatus.style.color = '#dc2626';
+      return;
+    }
+    setGithubToken(token);
+    tokenInput.value = '';
+    tokenStatus.textContent = '✅ Token 已保存，云端同步功能已启用';
+    tokenStatus.style.color = '#16a34a';
+  }
+
+  function checkTokenStatus() {
+    const tokenStatus = document.getElementById('token-status');
+    const token = getGithubToken();
+    if (token) {
+      tokenStatus.textContent = '✅ 已配置 GitHub Token，云端同步功能已启用';
+      tokenStatus.style.color = '#16a34a';
+    } else {
+      tokenStatus.textContent = '⚠️ 未配置 Token，文章仅保存在本地，其他设备无法看到。请输入 Token 以启用云端同步。';
+      tokenStatus.style.color = '#f59e0b';
+    }
+    updateSyncStatusBar();
+  }
+
+  function updateSyncStatusBar() {
+    const bar = document.getElementById('sync-status-bar');
+    if (!bar) return;
+    const token = getGithubToken();
+    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    if (!token) {
+      bar.textContent = '⚠️ 未配置云端同步';
+      bar.style.color = '#dc2626';
+    } else {
+      bar.textContent = `☁️ 已同步 · ${localPosts.length} 篇`;
+      bar.style.color = '#16a34a';
+    }
+  }
+
+  let contentMode = 'md';
+
+  const loginPage = document.getElementById('login-page');
+  const adminPage = document.getElementById('admin-page');
+  const passwordInput = document.getElementById('password-input');
+  const loginBtn = document.getElementById('login-btn');
+  const loginError = document.getElementById('login-error');
+  const logoutBtn = document.getElementById('logout-btn');
+  const successMessage = document.getElementById('success-message');
+
+  const postTitle = document.getElementById('post-title');
+  const postDate = document.getElementById('post-date');
+  const postReadtime = document.getElementById('post-readtime');
+  const postExcerpt = document.getElementById('post-excerpt');
+  const postContent = document.getElementById('post-content');
+
+  const publishBtn = document.getElementById('publish-btn');
+  const previewBtn = document.getElementById('preview-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const previewCard = document.getElementById('preview-card');
+
+  const uploadArea = document.getElementById('upload-area');
+  const uploadInput = document.getElementById('upload-input');
+  const uploadFilename = document.getElementById('upload-filename');
+  const uploadFilenameText = document.getElementById('upload-filename-text');
+  const uploadRemove = document.getElementById('upload-remove');
+
+  const modeMd = document.getElementById('mode-md');
+  const modeHtml = document.getElementById('mode-html');
+  const contentHint = document.getElementById('content-hint');
+
+  const newCategoryInput = document.getElementById('new-category-input');
+  const addCategoryBtn = document.getElementById('add-category-btn');
+  const categoryManageList = document.getElementById('category-manage-list');
+
+  const defaultCategories = ['建站实战', '量化投资', '海外营销', '副业创业', '技术趋势'];
+
+  function getCategories() {
+    const saved = localStorage.getItem('blogCategories');
+    if (saved) return JSON.parse(saved);
+    return [...defaultCategories];
+  }
+
+  function saveCategories(categories) {
+    localStorage.setItem('blogCategories', JSON.stringify(categories));
+  }
+
+  function renderCategorySelect() {
+    const categories = getCategories();
+    const container = document.getElementById('post-categories');
+    if (!container) return;
+    container.innerHTML = categories.map(cat =>
+      `<label><input type="checkbox" value="${escapeHtml(cat)}"><span>${escapeHtml(cat)}</span></label>`
+    ).join('');
+  }
+
+  function getSelectedCategories() {
+    const container = document.getElementById('post-categories');
+    if (!container) return [];
+    const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+    return Array.from(checked).map(cb => cb.value);
+  }
+
+  function setSelectedCategories(cats) {
+    const container = document.getElementById('post-categories');
+    if (!container) return;
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = cats.includes(cb.value);
+    });
+  }
+
+  function renderCategoryManageList() {
+    const categories = getCategories();
+    if (categories.length === 0) {
+      categoryManageList.innerHTML = '<div class="category-manage-empty">暂无分类，请添加新分类</div>';
+      return;
+    }
+    categoryManageList.innerHTML = categories.map(cat => `
+      <div class="category-manage-item" data-category="${cat}">
+        <span class="category-manage-item__name">${escapeHtml(cat)}</span>
+        <div class="category-manage-item__actions">
+          <button class="category-manage-item__btn category-manage-item__btn--edit" onclick="editCategory('${escapeHtml(cat)}')">编辑</button>
+          <button class="category-manage-item__btn category-manage-item__btn--delete" onclick="deleteCategory('${escapeHtml(cat)}')">删除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addCategory() {
+    const name = newCategoryInput.value.trim();
+    if (!name) { alert('请输入分类名称'); return; }
+    const categories = getCategories();
+    if (categories.includes(name)) { alert('该分类已存在'); return; }
+    categories.push(name);
+    saveCategories(categories);
+    newCategoryInput.value = '';
+    renderCategoryManageList();
+    renderCategorySelect();
+  }
+
+  function deleteCategory(name) {
+    if (!confirm(`确定要删除分类「${name}」吗？\n注意：已使用该分类的文章不会被删除，但分类筛选可能受到影响。`)) return;
+    const categories = getCategories();
+    const index = categories.indexOf(name);
+    if (index > -1) {
+      categories.splice(index, 1);
       saveCategories(categories);
-      newCategoryInput.value = '';
       renderCategoryManageList();
       renderCategorySelect();
     }
+  }
 
-    // 删除分类
-    function deleteCategory(name) {
-      if (!confirm(`确定要删除分类「${name}」吗？\n注意：已使用该分类的文章不会被删除，但分类筛选可能受到影响。`)) return;
-      const categories = getCategories();
-      const index = categories.indexOf(name);
-      if (index > -1) {
-        categories.splice(index, 1);
-        saveCategories(categories);
-        renderCategoryManageList();
-        renderCategorySelect();
-      }
-    }
-
-    // 编辑分类
-    function editCategory(oldName) {
-      const newName = prompt('请输入新的分类名称：', oldName);
-      if (!newName || !newName.trim()) return;
-      const trimmedName = newName.trim();
-      if (trimmedName === oldName) return;
-      const categories = getCategories();
-      if (categories.includes(trimmedName)) {
-        alert('该分类名称已存在');
-        return;
-      }
-      const index = categories.indexOf(oldName);
-      if (index > -1) {
-        categories[index] = trimmedName;
-        saveCategories(categories);
-        // 同时更新已发布文章的分类
-        const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-        posts.forEach(post => {
-          // 旧格式
-          if (post.category === oldName) {
-            post.category = trimmedName;
-          }
-          // 新格式（多标签）
-          if (post.categories && Array.isArray(post.categories)) {
-            const idx = post.categories.indexOf(oldName);
-            if (idx > -1) post.categories[idx] = trimmedName;
-          }
-        });
-        localStorage.setItem('blogPosts', JSON.stringify(posts));
-        renderCategoryManageList();
-        renderCategorySelect();
-        renderManageList();
-      }
-    }
-
-    // 设置默认日期为今天
-    postDate.value = new Date().toISOString().split('T')[0];
-
-    // 登录验证
-    function login() {
-      const password = passwordInput.value.trim();
-      if (password === ADMIN_PASSWORD) {
-        loginPage.style.display = 'none';
-        adminPage.style.display = 'block';
-        loginError.textContent = '';
-        checkTokenStatus();
-        updateSyncStatusBar();
-        renderCategorySelect();
-        renderCategoryManageList();
-        renderManageList();
-      } else {
-        loginError.textContent = '密码错误，请重试';
-        passwordInput.focus();
-      }
-    }
-
-    // 退出登录
-    function logout() {
-      adminPage.style.display = 'none';
-      loginPage.style.display = 'flex';
-      passwordInput.value = '';
-      passwordInput.focus();
-    }
-
-    // 预览文章
-    function previewPost() {
-      const title = postTitle.value || '未命名文章';
-      const categories = getSelectedCategories();
-      const catDisplay = categories.length > 0 ? categories.join(' / ') : '未选择';
-      const date = postDate.value || new Date().toISOString().split('T')[0];
-      const readtime = postReadtime.value || '5 分钟';
-      const excerpt = postExcerpt.value || '暂无摘要';
-      const content = postContent.value || '';
-
-      // 根据模式转换内容
-      let htmlContent = content;
-      if (contentMode === 'md' && content) {
-        htmlContent = marked.parse(content);
-      }
-
-      previewCard.querySelector('.preview-card__title').textContent = title;
-      previewCard.querySelector('.preview-card__meta').textContent = `${catDisplay} · ${date} · ${readtime}`;
-      previewCard.querySelector('.preview-card__excerpt').textContent = excerpt;
-      previewCard.querySelector('.preview-card__content').innerHTML = htmlContent;
-    }
-
-    // 清空表单
-    function clearForm() {
-      postTitle.value = '';
-      delete postTitle.dataset.editingId;
-      publishBtn.textContent = '发布文章';
-      // 清除所有checkbox选中
-      const container = document.getElementById('post-categories');
-      if (container) {
-        container.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
-      }
-      postDate.value = new Date().toISOString().split('T')[0];
-      postReadtime.value = '';
-      postExcerpt.value = '';
-      postContent.value = '';
-      previewCard.querySelector('.preview-card__title').textContent = '预览将显示在这里...';
-      previewCard.querySelector('.preview-card__meta').textContent = '分类 · 日期 · 阅读时间';
-      previewCard.querySelector('.preview-card__excerpt').textContent = '摘要内容';
-      previewCard.querySelector('.preview-card__content').innerHTML = '';
-      successMessage.classList.remove('show');
-    }
-
-    // 发布文章
-    function publishPost() {
-      const title = postTitle.value.trim();
-      const categories = getSelectedCategories();
-      const date = postDate.value;
-      const readtime = postReadtime.value.trim();
-      const excerpt = postExcerpt.value.trim();
-      const content = postContent.value.trim();
-
-      if (!title || !excerpt || !content) {
-        alert('请填写标题、摘要和正文内容');
-        return;
-      }
-
-      if (categories.length === 0) {
-        alert('请至少选择一个分类');
-        return;
-      }
-
-      let htmlContent = content;
-      if (contentMode === 'md') {
-        htmlContent = marked.parse(content);
-      }
-
-      let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      const editingId = postTitle.dataset.editingId;
-
-      if (editingId) {
-        const index = posts.findIndex(p => p.id === parseInt(editingId));
-        if (index !== -1) {
-          posts[index] = {
-            ...posts[index],
-            title: title,
-            categories: categories,
-            date: date,
-            readTime: readtime || '5 分钟',
-            excerpt: excerpt,
-            content: htmlContent
-          };
-          // 清理旧格式
-          delete posts[index].category;
-        }
-      } else {
-        const newPost = {
-          id: Date.now(),
-          title: title,
-          excerpt: excerpt,
-          categories: categories,
-          date: date,
-          readTime: readtime || '5 分钟',
-          author: '作者',
-          content: htmlContent
-        };
-        posts.unshift(newPost);
-      }
-
-      localStorage.setItem('blogPosts', JSON.stringify(posts));
-
-      // 显示成功消息
-      successMessage.classList.add('show');
-      const hasToken = !!getGithubToken();
-      successMessage.textContent = hasToken ? '✅ 文章发布成功！正在同步到云端...' : '✅ 文章已保存！⚠️ 未配置云端同步，文章仅在本设备可见。';
-
-      // 同步到云端（GitHub API）
-      if (hasToken) {
-        syncToCloud(posts).then(success => {
-          if (success) {
-            successMessage.textContent = '✅ 文章发布成功！已同步到云端，所有设备（包括手机）可见。';
-          } else {
-            successMessage.textContent = '⚠️ 文章已保存但云端同步失败。请检查Token或点击下方"同步到云端"重试。';
-          }
-          updateSyncStatusBar();
-        });
-      }
-
-      updateSyncStatusBar();
-
-      // 刷新文章列表
-      renderManageList();
-
-      // 清空表单
-      setTimeout(() => {
-        clearForm();
-      }, 2000);
-    }
-
-    // ============================================
-    // GitHub API 云端同步
-    // ============================================
-
-    // 获取云端文章列表
-    async function fetchCloudPosts() {
-      const token = getGithubToken();
-      if (!token) {
-        console.log('未设置 GitHub Token，跳过云端同步');
-        return { posts: [], sha: null };
-      }
-      try {
-        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          // 正确解码 base64 → UTF-8（修复中文乱码问题）
-          const binary = atob(data.content.replace(/\n/g, ''));
-          const bytes = new Uint8Array(binary.length);
-          for (let i = 0; i < binary.length; i++) {
-            bytes[i] = binary.charCodeAt(i);
-          }
-          const content = new TextDecoder('utf-8').decode(bytes);
-          return { posts: JSON.parse(content), sha: data.sha };
-        }
-        return { posts: [], sha: null };
-      } catch (e) {
-        console.error('获取云端文章失败:', e);
-        return { posts: [], sha: null };
-      }
-    }
-
-    // 同步文章到云端
-    async function syncToCloud(localPosts) {
-      const token = getGithubToken();
-      if (!token) {
-        console.log('未设置 GitHub Token，跳过云端同步');
-        return false;
-      }
-      try {
-        const { posts: cloudPosts, sha } = await fetchCloudPosts();
-
-        // 合并云端和本地文章（去重）
-        const merged = [...cloudPosts];
-        localPosts.forEach(localPost => {
-          const existIndex = merged.findIndex(p => p.id === localPost.id);
-          if (existIndex !== -1) {
-            merged[existIndex] = localPost;
-          } else {
-            merged.unshift(localPost);
-          }
-        });
-
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null, 2))));
-        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
-
-        const response = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: '同步文章数据',
-            content: content,
-            sha: sha,
-            branch: GITHUB_CONFIG.branch
-          })
-        });
-
-        return response.ok;
-      } catch (e) {
-        console.error('同步到云端失败:', e);
-        return false;
-      }
-    }
-
-    // 同步所有本地文章到云端
-    async function syncAllToCloud() {
-      const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      if (localPosts.length === 0) {
-        alert('本地没有需要同步的文章');
-        return;
-      }
-
-      const syncBtn = document.getElementById('sync-cloud-btn');
-      if (syncBtn) {
-        syncBtn.textContent = '同步中...';
-        syncBtn.disabled = true;
-      }
-
-      const success = await syncToCloud(localPosts);
-      if (success) {
-        alert(`成功同步 ${localPosts.length} 篇文章到云端！\n现在所有设备（包括手机）都可以看到这些文章了。`);
-      } else {
-        alert('同步失败，请检查网络连接或 GitHub Token 是否有效。\n\n获取Token：GitHub → Settings → Developer settings → Personal access tokens → 生成新token（勾选repo权限）');
-      }
-      updateSyncStatusBar();
-
-      if (syncBtn) {
-        syncBtn.textContent = '同步本地文章到云端';
-        syncBtn.disabled = false;
-      }
-    }
-
-    // 渲染文章管理列表
-    function renderManageList() {
-      const manageList = document.getElementById('manage-list');
-      const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-
-      if (savedPosts.length === 0) {
-        manageList.innerHTML = '<div class="manage-empty">暂无已发布的文章，请在上方发布新文章</div>';
-        return;
-      }
-
-      manageList.innerHTML = savedPosts.map(post => {
-        const cats = post.categories || (post.category ? [post.category] : []);
-        const catTags = cats.map(c => `<span class="manage-item__tag">${escapeHtml(c)}</span>`).join(' ');
-        return `
-        <div class="manage-item">
-          <div class="manage-item__info">
-            <div class="manage-item__title">${escapeHtml(post.title)}</div>
-            <div class="manage-item__meta">
-              ${catTags}
-              ${escapeHtml(post.date)} · ${escapeHtml(post.readTime)}
-              ${!getGithubToken() ? ' <span style="color:#dc2626;font-size:0.75rem;" title="此文章仅在当前设备可见，移动端看不到">📱仅本地</span>' : ''}
-            </div>
-          </div>
-          <div class="manage-item__actions">
-            <button class="manage-item__btn manage-item__btn--edit" onclick="editPost(${post.id})">编辑</button>
-            <button class="manage-item__btn manage-item__btn--view" onclick="viewPost(${post.id})">查看</button>
-            <button class="manage-item__btn manage-item__btn--delete" onclick="deletePost(${post.id})">删除</button>
-          </div>
-        </div>
-      `}).join('');
-    }
-
-    // 删除文章
-    function deletePost(id) {
-      if (!confirm('确定要删除这篇文章吗？此操作不可恢复。')) return;
-
-      let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      posts = posts.filter(post => post.id !== id);
-      localStorage.setItem('blogPosts', JSON.stringify(posts));
-
-      // 同步删除到云端
-      syncToCloud(posts).then(success => {
-        if (success) {
-          console.log('删除已同步到云端');
+  function editCategory(oldName) {
+    const newName = prompt('请输入新的分类名称：', oldName);
+    if (!newName || !newName.trim()) return;
+    const trimmedName = newName.trim();
+    if (trimmedName === oldName) return;
+    const categories = getCategories();
+    if (categories.includes(trimmedName)) { alert('该分类名称已存在'); return; }
+    const index = categories.indexOf(oldName);
+    if (index > -1) {
+      categories[index] = trimmedName;
+      saveCategories(categories);
+      const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+      posts.forEach(post => {
+        if (post.category === oldName) post.category = trimmedName;
+        if (post.categories && Array.isArray(post.categories)) {
+          const idx = post.categories.indexOf(oldName);
+          if (idx > -1) post.categories[idx] = trimmedName;
         }
       });
-
+      localStorage.setItem('blogPosts', JSON.stringify(posts));
+      renderCategoryManageList();
+      renderCategorySelect();
       renderManageList();
+    }
+  }
+
+  postDate.value = new Date().toISOString().split('T')[0];
+
+  function login() {
+    const password = passwordInput.value.trim();
+    if (password === ADMIN_PASSWORD) {
+      loginPage.style.display = 'none';
+      adminPage.style.display = 'block';
+      loginError.textContent = '';
+      checkTokenStatus();
       updateSyncStatusBar();
+      renderCategorySelect();
+      renderCategoryManageList();
+      renderManageList();
+    } else {
+      loginError.textContent = '密码错误，请重试';
+      passwordInput.focus();
+    }
+  }
+
+  function logout() {
+    adminPage.style.display = 'none';
+    loginPage.style.display = 'flex';
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
+
+  function previewPost() {
+    const title = postTitle.value || '未命名文章';
+    const categories = getSelectedCategories();
+    const catDisplay = categories.length > 0 ? categories.join(' / ') : '未选择';
+    const date = postDate.value || new Date().toISOString().split('T')[0];
+    const readtime = postReadtime.value || '5 分钟';
+    const excerpt = postExcerpt.value || '暂无摘要';
+    const content = postContent.value || '';
+
+    let htmlContent = content;
+    if (contentMode === 'md' && content) {
+      htmlContent = marked.parse(content);
     }
 
-    // 查看文章（跳转到文章页）
-    function viewPost(id) {
-      window.open(`post.html?id=${id}`, '_blank');
+    previewCard.querySelector('.preview-card__title').textContent = title;
+    previewCard.querySelector('.preview-card__meta').textContent = `${catDisplay} · ${date} · ${readtime}`;
+    previewCard.querySelector('.preview-card__excerpt').textContent = excerpt;
+    previewCard.querySelector('.preview-card__content').innerHTML = htmlContent;
+  }
+
+  function clearForm() {
+    postTitle.value = '';
+    delete postTitle.dataset.editingId;
+    publishBtn.textContent = '发布文章';
+    const container = document.getElementById('post-categories');
+    if (container) {
+      container.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+    }
+    postDate.value = new Date().toISOString().split('T')[0];
+    postReadtime.value = '';
+    postExcerpt.value = '';
+    postContent.value = '';
+    previewCard.querySelector('.preview-card__title').textContent = '预览将显示在这里...';
+    previewCard.querySelector('.preview-card__meta').textContent = '分类 · 日期 · 阅读时间';
+    previewCard.querySelector('.preview-card__excerpt').textContent = '摘要内容';
+    previewCard.querySelector('.preview-card__content').innerHTML = '';
+    successMessage.classList.remove('show');
+  }
+
+  function publishPost() {
+    const title = postTitle.value.trim();
+    const categories = getSelectedCategories();
+    const date = postDate.value;
+    const readtime = postReadtime.value.trim();
+    const excerpt = postExcerpt.value.trim();
+    const content = postContent.value.trim();
+
+    if (!title || !excerpt || !content) {
+      alert('请填写标题、摘要和正文内容');
+      return;
     }
 
-    // 编辑文章
-    function editPost(id) {
-      const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      const post = posts.find(p => p.id === id);
-      if (!post) {
-        alert('文章不存在');
-        return;
+    if (categories.length === 0) {
+      alert('请至少选择一个分类');
+      return;
+    }
+
+    let htmlContent = content;
+    if (contentMode === 'md') {
+      htmlContent = marked.parse(content);
+    }
+
+    let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const editingId = postTitle.dataset.editingId;
+
+    if (editingId) {
+      const index = posts.findIndex(p => p.id === parseInt(editingId));
+      if (index !== -1) {
+        posts[index] = {
+          ...posts[index],
+          title: title, categories: categories, date: date,
+          readTime: readtime || '5 分钟', excerpt: excerpt, content: htmlContent
+        };
+        delete posts[index].category;
       }
-
-      postTitle.value = post.title;
-      // 多选回填：选中文章所属的所有分类
-      const editCats = post.categories || (post.category ? [post.category] : []);
-      setSelectedCategories(editCats);
-      postDate.value = post.date;
-      postReadtime.value = post.readTime;
-      postExcerpt.value = post.excerpt;
-      postContent.value = post.content;
-
-      postTitle.dataset.editingId = id;
-      publishBtn.textContent = '保存修改';
-
-      previewPost();
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // HTML 转义
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    // 事件监听
-    loginBtn.addEventListener('click', login);
-    passwordInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') login();
-    });
-
-    logoutBtn.addEventListener('click', logout);
-
-    publishBtn.addEventListener('click', publishPost);
-    previewBtn.addEventListener('click', previewPost);
-    clearBtn.addEventListener('click', clearForm);
-
-    // 分类管理事件
-    addCategoryBtn.addEventListener('click', addCategory);
-    newCategoryInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') addCategory();
-    });
-
-    // 实时预览
-    [postTitle, postDate, postReadtime, postExcerpt, postContent].forEach(input => {
-      input.addEventListener('input', previewPost);
-    });
-    // 分类checkbox变更时也刷新预览
-    const catContainer = document.getElementById('post-categories');
-    if (catContainer) {
-      catContainer.addEventListener('change', previewPost);
-    }
-
-    // 模式切换
-    modeMd.addEventListener('click', () => {
-      contentMode = 'md';
-      modeMd.classList.add('active');
-      modeHtml.classList.remove('active');
-      postContent.placeholder = '支持 Markdown 语法：## 二级标题、**粗体**、`代码` 等';
-      contentHint.textContent = 'Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)';
-      previewPost();
-    });
-
-    modeHtml.addEventListener('click', () => {
-      contentMode = 'html';
-      modeHtml.classList.add('active');
-      modeMd.classList.remove('active');
-      postContent.placeholder = '支持 HTML 格式：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
-      contentHint.textContent = 'HTML 标签：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
-      previewPost();
-    });
-
-    // 文件上传：点击选择
-    uploadArea.addEventListener('click', () => {
-      uploadInput.click();
-    });
-
-    // 文件上传：选择文件
-    uploadInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) handleFile(file);
-    });
-
-    // 文件上传：拖拽
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('upload-area--dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('upload-area--dragover');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('upload-area--dragover');
-      const file = e.dataTransfer.files[0];
-      if (file) handleFile(file);
-    });
-
-    // 移除已上传文件
-    uploadRemove.addEventListener('click', () => {
-      uploadFilename.classList.remove('show');
-      uploadInput.value = '';
-    });
-
-    // 处理 Markdown 文件
-    function handleFile(file) {
-      // 验证文件类型
-      const validTypes = ['.md', '.markdown', '.txt'];
-      const ext = '.' + file.name.split('.').pop().toLowerCase();
-      if (!validTypes.includes(ext)) {
-        alert('请上传 .md、.markdown 或 .txt 文件');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-        parseMarkdownFile(file.name, text);
+    } else {
+      const newPost = {
+        id: Date.now(), title: title, excerpt: excerpt,
+        categories: categories, date: date,
+        readTime: readtime || '5 分钟', author: '作者', content: htmlContent
       };
-      reader.readAsText(file);
+      posts.unshift(newPost);
     }
 
-    // 解析 Markdown 文件内容
-    function parseMarkdownFile(filename, text) {
-      // 显示文件名
-      uploadFilenameText.textContent = filename;
-      uploadFilename.classList.add('show');
+    localStorage.setItem('blogPosts', JSON.stringify(posts));
+    successMessage.classList.add('show');
+    const hasToken = !!getGithubToken();
+    successMessage.textContent = hasToken ? '✅ 文章发布成功！正在同步到云端...' : '✅ 文章已保存！⚠️ 未配置云端同步，文章仅在本设备可见。';
 
-      // 解析 frontmatter（--- 包裹的元数据）
-      let content = text;
-      const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
-      const frontmatterMatch = text.match(frontmatterRegex);
-
-      if (frontmatterMatch) {
-        const frontmatter = frontmatterMatch[1];
-        content = text.replace(frontmatterRegex, '');
-
-        // 解析 frontmatter 字段
-        const lines = frontmatter.split('\n');
-        lines.forEach(line => {
-          const match = line.match(/^(\w+):\s*(.+)$/);
-          if (match) {
-            const key = match[1].toLowerCase();
-            const value = match[2].replace(/['"]/g, '').trim();
-            if (key === 'title' && !postTitle.value) postTitle.value = value;
-            if ((key === 'category' || key === 'categories') && getSelectedCategories().length === 0) {
-              // 兼容单值和逗号分隔的多值
-              const cats = value.split(',').map(s => s.trim()).filter(Boolean);
-              setSelectedCategories(cats);
-            }
-            if (key === 'date' && !postDate.value) {
-              const formatted = value.split('T')[0];
-              postDate.value = formatted;
-            }
-            if (key === 'excerpt' || key === 'description') {
-              if (!postExcerpt.value) postExcerpt.value = value;
-            }
-          }
-        });
-      }
-
-      // 如果没有标题，从 Markdown 一级标题提取
-      if (!postTitle.value) {
-        const h1Match = content.match(/^#\s+(.+)$/m);
-        if (h1Match) {
-          postTitle.value = h1Match[1].trim();
-          content = content.replace(/^#\s+.+\n?/m, ''); // 移除一级标题
+    if (hasToken) {
+      syncToCloud(posts).then(success => {
+        if (success) {
+          successMessage.textContent = '✅ 文章发布成功！已同步到云端，所有设备（包括手机）可见。';
         } else {
-          // 从文件名提取标题
-          postTitle.value = filename.replace(/\.(md|markdown|txt)$/i, '');
+          successMessage.textContent = '⚠️ 文章已保存但云端同步失败。请检查Token或点击下方"同步到云端"重试。';
         }
-      }
-
-      // 如果没有摘要，取第一段文字
-      if (!postExcerpt.value) {
-        const firstParagraph = content.split('\n\n')[0].replace(/[#*`]/g, '').trim();
-        postExcerpt.value = firstParagraph.substring(0, 100) + (firstParagraph.length > 100 ? '...' : '');
-      }
-
-      // 自动计算阅读时间
-      if (!postReadtime.value) {
-        const wordCount = content.replace(/\s/g, '').length;
-        const readTime = Math.max(1, Math.ceil(wordCount / 400));
-        postReadtime.value = readTime + ' 分钟';
-      }
-
-      // 设置正文内容并切换到 Markdown 模式
-      postContent.value = content.trim();
-      contentMode = 'md';
-      modeMd.classList.add('active');
-      modeHtml.classList.remove('active');
-
-      // 触发预览
-      previewPost();
+        updateSyncStatusBar();
+      });
     }
-  </script>
+
+    updateSyncStatusBar();
+    renderManageList();
+
+    setTimeout(() => { clearForm(); }, 2000);
+  }
+
+  // ===== GitHub API =====
+  async function fetchCloudPosts() {
+    const token = getGithubToken();
+    if (!token) { console.log('未设置 GitHub Token，跳过云端同步'); return { posts: [], sha: null }; }
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
+      const response = await fetch(url, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const binary = atob(data.content.replace(/\n/g, ''));
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const content = new TextDecoder('utf-8').decode(bytes);
+        return { posts: JSON.parse(content), sha: data.sha };
+      }
+      return { posts: [], sha: null };
+    } catch (e) {
+      console.error('获取云端文章失败:', e);
+      return { posts: [], sha: null };
+    }
+  }
+
+  async function syncToCloud(localPosts) {
+    const token = getGithubToken();
+    if (!token) { console.log('未设置 GitHub Token，跳过云端同步'); return false; }
+    try {
+      const { posts: cloudPosts, sha } = await fetchCloudPosts();
+      const merged = [...cloudPosts];
+      localPosts.forEach(localPost => {
+        const existIndex = merged.findIndex(p => p.id === localPost.id);
+        if (existIndex !== -1) merged[existIndex] = localPost;
+        else merged.unshift(localPost);
+      });
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null, 2))));
+      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: '同步文章数据', content: content,
+          sha: sha, branch: GITHUB_CONFIG.branch
+        })
+      });
+      return response.ok;
+    } catch (e) {
+      console.error('同步到云端失败:', e);
+      return false;
+    }
+  }
+
+  async function syncAllToCloud() {
+    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    if (localPosts.length === 0) { alert('本地没有需要同步的文章'); return; }
+    const syncBtn = document.getElementById('sync-cloud-btn');
+    if (syncBtn) { syncBtn.textContent = '同步中...'; syncBtn.disabled = true; }
+    const success = await syncToCloud(localPosts);
+    if (success) {
+      alert(`成功同步 ${localPosts.length} 篇文章到云端！\n现在所有设备（包括手机）都可以看到这些文章了。`);
+    } else {
+      alert('同步失败，请检查网络连接或 GitHub Token 是否有效。\n\n获取Token：GitHub → Settings → Developer settings → Personal access tokens → 生成新token（勾选repo权限）');
+    }
+    updateSyncStatusBar();
+    if (syncBtn) { syncBtn.textContent = '同步本地文章到云端'; syncBtn.disabled = false; }
+  }
+
+  function renderManageList() {
+    const manageList = document.getElementById('manage-list');
+    const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    if (savedPosts.length === 0) {
+      manageList.innerHTML = '<div class="manage-empty">暂无已发布的文章</div>';
+      return;
+    }
+    manageList.innerHTML = savedPosts.map(post => {
+      const cats = post.categories || (post.category ? [post.category] : []);
+      const catTags = cats.map(c => `<span class="manage-item__tag">${escapeHtml(c)}</span>`).join(' ');
+      return `
+      <div class="manage-item">
+        <div class="manage-item__info">
+          <div class="manage-item__title">${escapeHtml(post.title)}</div>
+          <div class="manage-item__meta">
+            ${catTags}
+            ${escapeHtml(post.date)} · ${escapeHtml(post.readTime)}
+            ${!getGithubToken() ? ' <span style="color:#dc2626;font-size:11px;">仅本地</span>' : ''}
+          </div>
+        </div>
+        <div class="manage-item__actions">
+          <button class="manage-item__btn manage-item__btn--edit" onclick="editPost(${post.id})">编辑</button>
+          <button class="manage-item__btn manage-item__btn--view" onclick="viewPost(${post.id})">查看</button>
+          <button class="manage-item__btn manage-item__btn--delete" onclick="deletePost(${post.id})">删除</button>
+        </div>
+      </div>
+    `}).join('');
+  }
+
+  function deletePost(id) {
+    if (!confirm('确定要删除这篇文章吗？此操作不可恢复。')) return;
+    let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    posts = posts.filter(post => post.id !== id);
+    localStorage.setItem('blogPosts', JSON.stringify(posts));
+    syncToCloud(posts).then(success => { if (success) console.log('删除已同步到云端'); });
+    renderManageList();
+    updateSyncStatusBar();
+  }
+
+  function viewPost(id) {
+    window.open(`post.html?id=${id}`, '_blank');
+  }
+
+  function editPost(id) {
+    const posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const post = posts.find(p => p.id === id);
+    if (!post) { alert('文章不存在'); return; }
+    // Switch to editor section
+    if (typeof switchToEditor === 'function') switchToEditor();
+    postTitle.value = post.title;
+    const editCats = post.categories || (post.category ? [post.category] : []);
+    setSelectedCategories(editCats);
+    postDate.value = post.date;
+    postReadtime.value = post.readTime;
+    postExcerpt.value = post.excerpt;
+    postContent.value = post.content;
+    postTitle.dataset.editingId = id;
+    publishBtn.textContent = '保存修改';
+    previewPost();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+
+  // ===== Event listeners =====
+  loginBtn.addEventListener('click', login);
+  passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+  logoutBtn.addEventListener('click', logout);
+  publishBtn.addEventListener('click', publishPost);
+  previewBtn.addEventListener('click', previewPost);
+  clearBtn.addEventListener('click', clearForm);
+  addCategoryBtn.addEventListener('click', addCategory);
+  newCategoryInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addCategory(); });
+
+  [postTitle, postDate, postReadtime, postExcerpt, postContent].forEach(input => {
+    input.addEventListener('input', previewPost);
+  });
+  const catContainer = document.getElementById('post-categories');
+  if (catContainer) catContainer.addEventListener('change', previewPost);
+
+  modeMd.addEventListener('click', () => {
+    contentMode = 'md';
+    modeMd.classList.add('active');
+    modeHtml.classList.remove('active');
+    postContent.placeholder = '支持 Markdown 语法：## 二级标题、**粗体**、`代码` 等';
+    contentHint.textContent = 'Markdown 语法：## 标题、**粗体**、*斜体*、`代码`、[链接](url)';
+    previewPost();
+  });
+
+  modeHtml.addEventListener('click', () => {
+    contentMode = 'html';
+    modeHtml.classList.add('active');
+    modeMd.classList.remove('active');
+    postContent.placeholder = '支持 HTML 格式：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
+    contentHint.textContent = 'HTML 标签：<h2>二级标题</h2>、<p>段落</p>、<code>代码</code>';
+    previewPost();
+  });
+
+  uploadArea.addEventListener('click', () => { uploadInput.click(); });
+  uploadInput.addEventListener('change', (e) => { const file = e.target.files[0]; if (file) handleFile(file); });
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('upload-area--dragover'); });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('upload-area--dragover'); });
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('upload-area--dragover'); const file = e.dataTransfer.files[0]; if (file) handleFile(file); });
+  uploadRemove.addEventListener('click', () => { uploadFilename.classList.remove('show'); uploadInput.value = ''; });
+
+  function handleFile(file) {
+    const validTypes = ['.md', '.markdown', '.txt'];
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!validTypes.includes(ext)) { alert('请上传 .md、.markdown 或 .txt 文件'); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => { parseMarkdownFile(file.name, e.target.result); };
+    reader.readAsText(file);
+  }
+
+  function parseMarkdownFile(filename, text) {
+    uploadFilenameText.textContent = filename;
+    uploadFilename.classList.add('show');
+    let content = text;
+    const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
+    const frontmatterMatch = text.match(frontmatterRegex);
+    if (frontmatterMatch) {
+      const frontmatter = frontmatterMatch[1];
+      content = text.replace(frontmatterRegex, '');
+      const lines = frontmatter.split('\n');
+      lines.forEach(line => {
+        const match = line.match(/^(\w+):\s*(.+)$/);
+        if (match) {
+          const key = match[1].toLowerCase();
+          const value = match[2].replace(/['"]/g, '').trim();
+          if (key === 'title' && !postTitle.value) postTitle.value = value;
+          if ((key === 'category' || key === 'categories') && getSelectedCategories().length === 0) {
+            const cats = value.split(',').map(s => s.trim()).filter(Boolean);
+            setSelectedCategories(cats);
+          }
+          if (key === 'date' && !postDate.value) {
+            postDate.value = value.split('T')[0];
+          }
+          if (key === 'excerpt' || key === 'description') {
+            if (!postExcerpt.value) postExcerpt.value = value;
+          }
+        }
+      });
+    }
+    if (!postTitle.value) {
+      const h1Match = content.match(/^#\s+(.+)$/m);
+      if (h1Match) {
+        postTitle.value = h1Match[1].trim();
+        content = content.replace(/^#\s+.+\n?/m, '');
+      } else {
+        postTitle.value = filename.replace(/\.(md|markdown|txt)$/i, '');
+      }
+    }
+    if (!postExcerpt.value) {
+      const firstParagraph = content.split('\n\n')[0].replace(/[#*`]/g, '').trim();
+      postExcerpt.value = firstParagraph.substring(0, 100) + (firstParagraph.length > 100 ? '...' : '');
+    }
+    if (!postReadtime.value) {
+      const wordCount = content.replace(/\s/g, '').length;
+      postReadtime.value = Math.max(1, Math.ceil(wordCount / 400)) + ' 分钟';
+    }
+    postContent.value = content.trim();
+    contentMode = 'md';
+    modeMd.classList.add('active');
+    modeHtml.classList.remove('active');
+    previewPost();
+  }
+</script>
 </body>
 </html>
