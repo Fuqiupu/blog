@@ -787,6 +787,128 @@ mark {
   color: var(--color-primary);
 }
 
+/* ---- 代码块 ---- */
+.post-content__body pre {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.post-content__body pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: var(--color-text);
+}
+
+/* ---- 表格 ---- */
+.post-content__body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.post-content__body thead {
+  border-bottom: 2px solid var(--color-border);
+}
+
+.post-content__body th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.post-content__body td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.post-content__body tbody tr:hover {
+  background: var(--color-bg-alt);
+}
+
+/* ---- 引用块 ---- */
+.post-content__body blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: 12px 20px;
+  margin: 0 0 20px;
+  background: var(--color-bg-alt);
+  border-radius: 0 8px 8px 0;
+  color: var(--color-text-light);
+}
+
+.post-content__body blockquote p {
+  margin-bottom: 8px;
+}
+
+.post-content__body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- 列表 ---- */
+.post-content__body ul,
+.post-content__body ol {
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+
+.post-content__body li {
+  margin-bottom: 6px;
+  line-height: 1.7;
+}
+
+.post-content__body li ul,
+.post-content__body li ol {
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+/* ---- 水平线 ---- */
+.post-content__body hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 32px 0;
+}
+
+/* ---- 图片 ---- */
+.post-content__body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+/* ---- 更深层级标题 ---- */
+.post-content__body h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  scroll-margin-top: 100px;
+}
+
+.post-content__body h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 16px 0 6px;
+}
+
+.post-content__body h6 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 16px 0 6px;
+  color: var(--color-text-light);
+}
+
 /* 上一篇 / 下一篇导航 */
 .post-nav {
   display: grid;
